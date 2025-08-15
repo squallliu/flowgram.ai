@@ -5,7 +5,7 @@
 
 import React, { useEffect, useRef } from 'react';
 
-import { Renderer, EditorProvider, ActiveLinePlaceholder } from '@coze-editor/editor/react';
+import { Renderer, EditorProvider, ActiveLinePlaceholder, InferValues } from '@coze-editor/editor/react';
 import preset, { EditorAPI } from '@coze-editor/editor/preset-prompt';
 
 import { PropsType } from './types';
@@ -14,9 +14,14 @@ import MarkdownHighlight from './extensions/markdown';
 import LanguageSupport from './extensions/language-support';
 import JinjaHighlight from './extensions/jinja';
 
-export type PromptEditorPropsType = PropsType;
+type Preset = typeof preset;
+type Options = Partial<InferValues<Preset[number]>>;
 
-export function PromptEditor(props: PropsType) {
+export interface PromptEditorPropsType extends PropsType {
+  options?: Options;
+}
+
+export function PromptEditor(props: PromptEditorPropsType) {
   const {
     value,
     onChange,
@@ -27,6 +32,7 @@ export function PromptEditor(props: PropsType) {
     hasError,
     children,
     disableMarkdownHighlight,
+    options,
   } = props || {};
 
   const editorRef = useRef<EditorAPI | null>(null);
@@ -51,6 +57,7 @@ export function PromptEditor(props: PropsType) {
             readOnly: readonly,
             editable: !readonly,
             placeholder,
+            ...options
           }}
           onChange={(e) => {
             onChange({ type: 'template', content: e.value });
