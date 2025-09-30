@@ -107,6 +107,7 @@ export interface LayoutOptions {
   enableAnimation?: boolean;
   animationDuration?: number;
   disableFitView?: boolean;
+  filterNode?: (params: { node: WorkflowNodeEntity; parent?: WorkflowNodeEntity }) => boolean;
 }
 
 export interface LayoutConfig {

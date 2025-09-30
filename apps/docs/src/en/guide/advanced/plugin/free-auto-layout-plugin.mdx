@@ -140,6 +140,8 @@ interface LayoutOptions {
   enableAnimation?: boolean;
   /** Animation duration (milliseconds) */
   animationDuration?: number;
+  /** Node filter function to control which nodes participate in layout calculation */
+  filterNode?: (params: { node: WorkflowNodeEntity; parent?: WorkflowNodeEntity }) => boolean;
 }
 ```
 
@@ -163,7 +165,7 @@ The plugin is implemented based on the Dagre library, which is a JavaScript libr
 
 ## Advanced Usage
 
-### Custom Follow Nodes
+### Custom Follow Node
 
 You can customize node following relationships through the `getFollowNode` function:
 
@@ -171,12 +173,38 @@ You can customize node following relationships through the `getFollowNode` funct
 const layoutOptions: LayoutOptions = {
   getFollowNode: (node: LayoutNode) => {
     // Return the node ID that should follow the current node
-    if (node.flowNodeType.type === 'comment') {
+    if (node.flowNodeType === 'comment') {
       return getNearestNode(node);
     }
     return undefined;
   }
 };
+await tools.autoLayout(layoutOptions);
+```
+
+### Node Filtering
+
+You can control which nodes participate in layout calculation through the `filterNode` function:
+
+```typescript
+const layoutOptions: LayoutOptions = {
+  filterNode: ({ node, parent }) => {
+    // Filter out specific types of nodes
+    if (node.flowNodeType === 'comment') {
+      return false;
+    }
+
+    // Filter based on parent node conditions
+    if (parent && parent.flowNodeType.type === 'group') {
+      return false;
+    }
+
+    return true; // Include all nodes by default
+  }
+};
+
+// Execute layout with filter options
+await tools.autoLayout(layoutOptions);
 ```
 
 ### Nested Container Layout

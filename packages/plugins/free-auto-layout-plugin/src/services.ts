@@ -82,7 +82,9 @@ export class AutoLayoutService {
 
   /** 创建节点布局数据 */
   private createLayoutNode(node: WorkflowNodeEntity, options: LayoutOptions): LayoutNode {
-    const { blocks } = node;
+    const blocks = node.blocks.filter((blockNode) =>
+      options.filterNode ? options.filterNode?.({ node: blockNode, parent: node.parent }) : true
+    );
     const edges = this.getNodesAllLines(blocks);
 
     // 创建子布局节点

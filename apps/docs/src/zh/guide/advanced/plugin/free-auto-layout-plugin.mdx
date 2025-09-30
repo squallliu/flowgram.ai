@@ -141,6 +141,8 @@ interface LayoutOptions {
   enableAnimation?: boolean;
   /** 动画持续时间（毫秒） */
   animationDuration?: number;
+  /** 节点过滤函数，用于控制哪些节点参与布局计算 */
+  filterNode?: (params: { node: WorkflowNodeEntity; parent?: WorkflowNodeEntity }) => boolean;
 }
 ```
 
@@ -172,12 +174,38 @@ interface LayoutOptions {
 const layoutOptions: LayoutOptions = {
   getFollowNode: (node: LayoutNode) => {
     // 返回应该跟随当前节点的节点ID
-    if (node.flowNodeType.type === 'comment') {
+    if (node.flowNodeType === 'comment') {
       return getNearestNode(node);
     }
     return undefined;
   }
 };
+await tools.autoLayout(layoutOptions);
+```
+
+### 节点过滤
+
+可以通过 `filterNode` 函数控制哪些节点参与布局计算：
+
+```typescript
+const layoutOptions: LayoutOptions = {
+  filterNode: ({ node, parent }) => {
+    // 过滤掉特定类型的节点
+    if (node.flowNodeType === 'comment') {
+      return false;
+    }
+
+    // 根据父节点条件过滤
+    if (parent && parent.flowNodeType.type === 'group') {
+      return false;
+    }
+
+    return true; // 默认包含所有节点
+  }
+};
+
+// 使用过滤选项执行布局
+await tools.autoLayout(layoutOptions);
 ```
 
 ### 嵌套容器布局

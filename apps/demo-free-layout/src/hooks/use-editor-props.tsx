@@ -277,7 +277,7 @@ export function useEditorProps(
       },
       plugins: () => [
         createFreeStackPlugin({
-          sortNodes: (nodes) => {
+          sortNodes: (nodes: WorkflowNodeEntity[]) => {
             const commentNodes: WorkflowNodeEntity[] = [];
             const otherNodes: WorkflowNodeEntity[] = [];
             nodes.forEach((node) => {
