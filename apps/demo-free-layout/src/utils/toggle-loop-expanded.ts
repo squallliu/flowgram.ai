@@ -5,12 +5,20 @@
 
 import { WorkflowNodeEntity } from '@flowgram.ai/free-layout-editor';
 
+const HeightCollapsed = 54;
+const HeightExpanded = 225;
+
 export function toggleLoopExpanded(
   node: WorkflowNodeEntity,
-  expanded: boolean = node.transform.collapsed,
-  heightCollapsed = 54
+  expanded: boolean = node.transform.collapsed
 ) {
-  if (!node.getNodeMeta().isContainer || node.transform.collapsed === !expanded) {
+  if (node.blocks.length === 0) {
+    const bounds = node.bounds.clone();
+    node.transform.size = {
+      width: bounds.width,
+      height: node.transform.collapsed === expanded ? HeightCollapsed : HeightExpanded,
+    };
+    node.transform.transform.fireChange();
     return;
   }
   const bounds = node.bounds.clone();
@@ -35,7 +43,7 @@ export function toggleLoopExpanded(
     // 折叠起来，宽高不再根据子节点变化，需要手动设置
     node.transform.size = {
       width: bounds.width,
-      height: heightCollapsed,
+      height: HeightCollapsed,
     };
   } else {
     node.transform.transform.update({
