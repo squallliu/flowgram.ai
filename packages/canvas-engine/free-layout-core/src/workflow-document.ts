@@ -740,13 +740,15 @@ export class WorkflowDocument extends FlowDocument {
     nodes: WorkflowNodeEntity[];
     edges: WorkflowLineEntity[];
   } {
-    const { parent = this.root } = options ?? {};
+    const { parent = this.root, onNodeCreated, onEdgeCreated } = options ?? {};
     // 创建节点
     const parentID = this.getNodeSubCanvas(parent)?.canvasNode.id ?? parent.id;
     const processedJSON = buildGroupJSON(json);
     const nodes = processedJSON.nodes.map((nodeJSON: WorkflowNodeJSON) =>
       this._createWorkflowNode(nodeJSON, {
         parentID,
+        onNodeCreated,
+        onEdgeCreated,
       })
     );
     // 创建线条

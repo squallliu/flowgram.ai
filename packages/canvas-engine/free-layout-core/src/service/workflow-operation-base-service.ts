@@ -61,6 +61,7 @@ export class WorkflowOperationBaseServiceImpl
     };
 
     const oldNodes = this.document.getAllNodes();
+    const oldEdges = this.linesManager.getAllLines();
     const oldPositionMap = new Map<string, IPoint>(
       oldNodes.map((node) => [
         node.id,
@@ -74,13 +75,19 @@ export class WorkflowOperationBaseServiceImpl
     const newNodes: WorkflowNodeEntity[] = [];
     const newEdges: WorkflowLineEntity[] = [];
 
-    // 清空线条
-    this.linesManager.getAllLines().map((line) => line.dispose());
-
     // 逐层渲染
     this.document.batchAddFromJSON(workflowJSON, {
       onNodeCreated: (node) => newNodes.push(node),
       onEdgeCreated: (edge) => newEdges.push(edge),
+    });
+
+    const newEdgeIDSet = new Set<string>(newEdges.map((edge) => edge.id));
+    oldEdges.forEach((edge) => {
+      // 清空旧线条
+      if (!newEdgeIDSet.has(edge.id)) {
+        edge.dispose();
+        return;
+      }
     });
 
     const newNodeIDSet = new Set<string>(newNodes.map((node) => node.id));
