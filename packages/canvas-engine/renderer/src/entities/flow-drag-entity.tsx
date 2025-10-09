@@ -42,8 +42,6 @@ export class FlowDragEntity extends ConfigEntity<FlowDragEntityConfig> {
 
   static type = 'FlowDragEntity';
 
-  private containerDom: HTMLDivElement;
-
   private containerX = 0;
 
   private containerY = 0;
@@ -179,7 +177,6 @@ export class FlowDragEntity extends ConfigEntity<FlowDragEntityConfig> {
         } else {
           this.containerX -= SCROLL_DELTA;
         }
-        this.setDomStyle();
       }
     }, SCROLL_INTERVAL);
     this._scrollXInterval = { interval, origin };
@@ -213,7 +210,6 @@ export class FlowDragEntity extends ConfigEntity<FlowDragEntityConfig> {
         } else {
           this.containerY -= SCROLL_DELTA;
         }
-        this.setDomStyle();
       }
     }, SCROLL_INTERVAL);
     this._scrollYInterval = { interval, origin };
@@ -231,21 +227,10 @@ export class FlowDragEntity extends ConfigEntity<FlowDragEntityConfig> {
     this._stopScrollY();
   }
 
-  setDomStyle() {
-    this.containerDom.style.left = `${this.containerX}px`;
-    this.containerDom.style.top = `${this.containerY}px`;
-  }
-
-  scrollDirection(
-    e: MouseEvent,
-    containerDom: HTMLDivElement,
-    x: number,
-    y: number
-  ): ScrollDirection | undefined {
+  scrollDirection(e: MouseEvent, x: number, y: number): ScrollDirection | undefined {
     const playgroundConfig = this.playgroundConfigEntity.config;
     const currentScrollX = playgroundConfig.scrollX;
     const currentScrollY = playgroundConfig.scrollY;
-    this.containerDom = containerDom;
     this.containerX = x;
     this.containerY = y;
     const clientRect = this.playgroundConfigEntity.playgroundDomNode.getBoundingClientRect();

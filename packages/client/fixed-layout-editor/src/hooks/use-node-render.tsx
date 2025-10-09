@@ -111,7 +111,7 @@ export function useNodeRender(nodeFromProps?: FlowNodeEntity): NodeRenderReturnT
   const nodeCache = useRef<FlowNodeEntity | undefined>();
   const renderData = renderNode.getData<FlowNodeRenderData>(FlowNodeRenderData)!;
   const { expanded, dragging, activated } = renderData;
-  const { startDrag: startDragOrigin } = useStartDragNode();
+  const { startDrag: startDragOrigin, dragOffset } = useStartDragNode();
   const playground = usePlayground();
   const isBlockOrderIcon = renderNode.flowNodeType === FlowNodeBaseType.BLOCK_ORDER_ICON;
   const isBlockIcon = renderNode.flowNodeType === FlowNodeBaseType.BLOCK_ICON;
@@ -129,7 +129,11 @@ export function useNodeRender(nodeFromProps?: FlowNodeEntity): NodeRenderReturnT
 
   const startDrag = useCallback(
     (e: React.MouseEvent) => {
-      startDragOrigin(e, { dragStartEntity: renderNode }, { dragOffsetX: 30, dragOffsetY: 30 });
+      startDragOrigin(
+        e,
+        { dragStartEntity: renderNode },
+        { dragOffsetX: dragOffset.x, dragOffsetY: dragOffset.y }
+      );
     },
     [renderNode, startDragOrigin]
   );

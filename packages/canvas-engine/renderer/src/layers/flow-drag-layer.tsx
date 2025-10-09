@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+import ReactDOM from 'react-dom';
 import React from 'react';
 
 import { inject, injectable } from 'inversify';
@@ -114,7 +115,7 @@ export class FlowDragLayer extends Layer<FlowDragOptions> {
     dropEntity: FlowNodeEntity
   ) => Promise<FlowNodeEntity>;
 
-  private dragOffset = {
+  dragOffset = {
     x: DEFAULT_DRAG_OFFSET_X,
     y: DEFAULT_DRAG_OFFSET_Y,
   };
@@ -242,18 +243,18 @@ export class FlowDragLayer extends Layer<FlowDragOptions> {
 
         this.containerRef.current.style.visibility = 'visible';
         this.pipelineNode.parentElement!.appendChild(this.draggingNodeMask);
-        this.containerRef.current.style.left = `${dragBlockX}px`;
-        this.containerRef.current.style.top = `${dragBlockY}px`;
+
+        this.containerRef.current.style.left = `${
+          dragBlockX + this.pipelineNode.offsetLeft + clientBounds.x + window.scrollX
+        }px`;
+        this.containerRef.current.style.top = `${
+          dragBlockY + this.pipelineNode.offsetTop + clientBounds.y + window.scrollY
+        }px`;
         this.containerRef.current.style.transformOrigin = 'top left';
         this.containerRef.current.style.transform = `scale(${scale})`;
 
         if (!this.disableDragScroll) {
-          this.flowDragConfigEntity.scrollDirection(
-            event,
-            this.containerRef.current,
-            dragBlockX,
-            dragBlockY
-          );
+          this.flowDragConfigEntity.scrollDirection(event, dragBlockX, dragBlockY);
         }
       }
     }
@@ -383,11 +384,16 @@ export class FlowDragLayer extends Layer<FlowDragOptions> {
     }
   }
 
+  dispose(): void {
+    this._dragger.dispose();
+    super.dispose();
+  }
+
   render() {
     // styled-component component type 为 any
     const DragComp: any = this.dragNodeComp.renderer;
 
-    return (
+    return ReactDOM.createPortal(
       <div
         ref={this.containerRef}
         style={{ position: 'absolute', zIndex: 99999, visibility: 'hidden' }}
@@ -398,7 +404,8 @@ export class FlowDragLayer extends Layer<FlowDragOptions> {
           dragStart={this.dragStartEntity}
           dragNodes={this.dragEntities}
         />
-      </div>
+      </div>,
+      document.body
     );
   }
 }

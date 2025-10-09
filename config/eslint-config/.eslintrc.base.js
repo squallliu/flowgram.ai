@@ -88,7 +88,6 @@ module.exports = {
         'react/jsx-no-useless-fragment': 'off',
         'no-unused-vars': 'off',
         'no-redeclare': 'off',
-        'no-empty-fuNction': 'off',
         'prefer-destructurin': 'off',
         'no-underscore-dangle': 'off',
         'no-empty-function': 'off',
