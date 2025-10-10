@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Input } from '@douyinfe/semi-ui';
 
-type InputProps = React.ComponentPropsWithoutRef<typeof Input>;
+type InputProps = React.ComponentPropsWithRef<typeof Input>;
 
 export function BlurInput(props: InputProps) {
   const [value, setValue] = useState('');
@@ -24,6 +24,7 @@ export function BlurInput(props: InputProps) {
 
   return (
     <Input
+      ref={props.ref}
       {...props}
       value={value}
       onChange={(value) => {

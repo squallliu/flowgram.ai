@@ -1,6 +1,7 @@
 {
   "name": "@flowgram.ai/coze-editor",
   "version": "0.1.8",
+  "description": "This is the proxy for @coze-editor/editor, to make sure the version of coze-editor is the same as @flowgram.ai/form-materials",
   "homepage": "https://flowgram.ai/",
   "repository": "https://github.com/bytedance/flowgram.ai",
   "license": "MIT",

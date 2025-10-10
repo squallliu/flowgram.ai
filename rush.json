@@ -958,6 +958,15 @@
             ]
         },
         {
+            "packageName": "@flowgram.ai/demo-materials",
+            "projectFolder": "apps/demo-materials",
+            "tags": [
+                "level-1",
+                "team-flow",
+                "demo"
+            ]
+        },
+        {
             "packageName": "@flowgram.ai/demo-nextjs",
             "projectFolder": "apps/demo-nextjs",
             "versionPolicyName": "appPolicy",
