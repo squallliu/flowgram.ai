@@ -43,7 +43,7 @@ const PanelContainer = styled.div`
 
   .semi-tabs-content {
     padding: 20px;
-    height: 700px;
+    height: 80vh;
     overflow: auto;
   }
 `;

@@ -4,3 +4,4 @@
  */
 
 export { FreeFormMetaStoryBuilder } from './components/free-form-meta-story-builder';
+export { FormHeader } from './components/form-header';

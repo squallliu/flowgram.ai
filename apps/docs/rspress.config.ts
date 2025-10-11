@@ -5,9 +5,10 @@
 
 import * as path from 'node:path';
 
+import mermaid from 'rspress-plugin-mermaid';
 import { pluginLlms } from '@rspress/plugin-llms';
 import { transformerCompatibleMetaHighlight } from '@rspress/core/shiki-transformers';
-import { defineConfig } from '@rspress/core';
+import { defineConfig, RspressPlugin } from '@rspress/core';
 import { pluginLess } from '@rsbuild/plugin-less';
 
 export default defineConfig({
@@ -42,6 +43,10 @@ export default defineConfig({
               },
             ],
           },
+          /**
+           * ignore warnings from @coze-editor/editor/language-typescript
+           */
+          ignoreWarnings: [/Critical dependency: the request of a dependency is an expression/],
         });
       },
     },
@@ -64,7 +69,8 @@ export default defineConfig({
       '/en/examples/free-layout/free-layout-simple',
       '/en/examples/fixed-layout/fixed-feature-overview',
       '/en/examples/free-layout/free-feature-overview',
-
+      /\/en\/guide\/materials\/.*\/.*/,
+      /\/guide\/materials\/.*\/.*/,
       '/examples/node-form/basic',
       '/examples/node-form/array',
       '/examples/node-form/dynamic',
@@ -129,6 +135,7 @@ export default defineConfig({
         include: ({ page }) => page.lang === 'en',
       },
     ]),
+    mermaid() as RspressPlugin,
   ],
   themeConfig: {
     localeRedirect: 'auto',

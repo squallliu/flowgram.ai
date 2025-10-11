@@ -23,16 +23,13 @@ export const INITIAL_DATA: WorkflowJSON = {
           type: 'object',
           properties: {
             str: { type: 'string' },
-            num: { type: 'number' },
-            bool: { type: 'boolean' },
-            int: { type: 'integer' },
             obj: {
               type: 'object',
               properties: {
                 obj2: {
                   type: 'object',
                   properties: {
-                    str: { type: 'string' },
+                    num: { type: 'number' },
                   },
                 },
               },

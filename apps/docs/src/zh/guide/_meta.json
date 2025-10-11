@@ -9,37 +9,50 @@
   {
     "type": "dir",
     "name": "free-layout",
-    "label": "自由布局"
+    "label": "自由布局",
+    "collapsed": true
   },
   {
     "type": "dir",
     "name": "fixed-layout",
-    "label": "固定布局"
+    "label": "固定布局",
+    "collapsed": true
   },
   {
     "type": "dir",
     "name": "form",
-    "label": "表单"
+    "label": "表单",
+    "collapsed": true
   },
   {
     "type": "dir",
     "name": "variable",
-    "label": "变量"
+    "label": "变量",
+    "collapsed": true
+  },
+  {
+    "type": "dir",
+    "name": "materials",
+    "label": "官方物料库 (WIP)",
+    "collapsed": true
   },
   {
     "type": "dir",
     "name": "plugin",
-    "label": "插件"
+    "label": "插件",
+    "collapsed": true
   },
   {
     "type": "dir",
     "name": "advanced",
-    "label": "进阶"
+    "label": "进阶",
+    "collapsed": true
   },
   {
     "type": "dir",
     "name": "concepts",
-    "label": "概念"
+    "label": "概念",
+    "collapsed": true
   },
   {
     "type": "dir",

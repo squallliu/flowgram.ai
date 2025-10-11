@@ -1,0 +1,12 @@
+[
+  "type-selector",
+  "json-schema-editor",
+  "variable-selector",
+  "dynamic-value-input",
+  "condition-row",
+  "inputs-values",
+  "code-editor",
+  "json-editor-with-variables",
+  "prompt-editor-with-variables",
+  "prompt-editor-with-inputs"
+]

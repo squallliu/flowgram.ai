@@ -14,10 +14,17 @@ import { CUSTOM_REGISTRY, DEFAULT_FORM_META, END_REGISTRY, START_REGISTRY } from
 interface PropsType {
   formMeta?: FormMeta;
   initialData?: WorkflowJSON;
+  filterEndNode?: boolean;
+  filterStartNode?: boolean;
 }
 
 export function FreeFormMetaStoryBuilder(props: PropsType) {
-  const { formMeta = DEFAULT_FORM_META, initialData } = props;
+  const {
+    formMeta = DEFAULT_FORM_META,
+    initialData,
+    filterEndNode = false,
+    filterStartNode = false,
+  } = props;
 
   const registries = useMemo(
     () => [
@@ -33,18 +40,33 @@ export function FreeFormMetaStoryBuilder(props: PropsType) {
     [formMeta]
   );
 
-  const initialDataWithDefault = useMemo(
-    () => ({
-      nodes: [
-        ...(initialData?.nodes || []),
-        ...INITIAL_DATA.nodes.filter(
-          (node) => !initialData?.nodes?.find((item) => item.id === node.id)
-        ),
-      ],
-      edges: [...(initialData?.edges || []), ...INITIAL_DATA.edges],
-    }),
-    [initialData]
-  );
+  const initialDataWithDefault = useMemo(() => {
+    const nodes = [
+      ...(initialData?.nodes || []),
+      ...INITIAL_DATA.nodes
+        .filter((node) => !initialData?.nodes?.find((item) => item.id === node.id))
+        .filter((node) => {
+          if (node.type === 'start') {
+            return !filterStartNode;
+          }
+          if (node.type === 'end') {
+            return !filterEndNode;
+          }
+          return true;
+        }),
+    ];
+
+    const edges = [...(initialData?.edges || []), ...INITIAL_DATA.edges].filter(
+      (edge) =>
+        nodes.find((node) => node.id === edge.sourceNodeID) ||
+        nodes.find((node) => node.id === edge.targetNodeID)
+    );
+
+    return {
+      nodes,
+      edges,
+    };
+  }, [initialData, filterEndNode, filterStartNode]);
 
   return (
     <div>

@@ -1,0 +1,10 @@
+[
+  "introduction",
+  "cli",
+  {
+    "type": "dir",
+    "name": "components",
+    "label": "Components",
+    "collapsed": true
+  }
+]
