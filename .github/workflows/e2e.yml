@@ -23,6 +23,15 @@ jobs:
       - name: Rush build
         run: node common/scripts/install-run-rush.js build
 
+      # 缓存 Playwright 浏览器
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('e2e/fixed-layout/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: Install Playwright Browsers
         run: pushd e2e/fixed-layout && npx playwright install --with-deps --only-shell chromium && popd
 

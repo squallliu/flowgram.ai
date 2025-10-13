@@ -12,6 +12,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:3000',
     headless: true,
+    actionTimeout: 10 * 1000, // timeout for waitFor/click...
   },
   webServer: {
     command: 'rush dev:demo-fixed-layout',
