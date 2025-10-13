@@ -41,7 +41,7 @@ export function ConditionInputs() {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <ConditionRow
                       readonly={readonly}
-                      style={{ flexGrow: 1 }}
+                      style={{ flexGrow: 1, overflow: 'hidden' }}
                       value={childField.value.value}
                       onChange={(v) => childField.onChange({ value: v, key: childField.value.key })}
                     />
