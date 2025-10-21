@@ -14,10 +14,11 @@ import {
 import preset, { EditorAPI } from '@flowgram.ai/coze-editor/preset-prompt';
 
 import { PropsType } from './types';
-import { UIContainer } from './styles';
 import MarkdownHighlight from './extensions/markdown';
 import LanguageSupport from './extensions/language-support';
 import JinjaHighlight from './extensions/jinja';
+
+import './styles.css';
 
 type Preset = typeof preset;
 type Options = Partial<InferValues<Preset[number]>>;
@@ -50,7 +51,7 @@ export function PromptEditor(props: PromptEditorPropsType) {
   }, [value]);
 
   return (
-    <UIContainer $hasError={hasError} style={style}>
+    <div className={`gedit-m-prompt-editor-container ${hasError ? 'has-error' : ''}`} style={style}>
       <EditorProvider>
         <Renderer
           didMount={(editor: EditorAPI) => {
@@ -76,6 +77,6 @@ export function PromptEditor(props: PromptEditorPropsType) {
         <JinjaHighlight />
         {children}
       </EditorProvider>
-    </UIContainer>
+    </div>
   );
 }

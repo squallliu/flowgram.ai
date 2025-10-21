@@ -5,7 +5,6 @@
 
 import React, { useEffect, useRef } from 'react';
 
-import styled, { css } from 'styled-components';
 import {
   ActiveLinePlaceholder,
   createRenderer,
@@ -17,6 +16,8 @@ import { EditorView } from '@codemirror/view';
 
 import { getSuffixByLanguageId } from './utils';
 
+import './styles.css';
+
 const OriginCodeEditor = createRenderer(preset, [
   EditorView.theme({
     '&.cm-focused': {
@@ -25,13 +26,7 @@ const OriginCodeEditor = createRenderer(preset, [
   }),
 ]);
 
-const UIContainer = styled.div<{ $mini?: boolean }>`
-  ${({ $mini }) =>
-    $mini &&
-    css`
-      height: 24px;
-    `}
-`;
+// CSS styles are in styles.css
 
 type Preset = typeof preset;
 type Options = Partial<InferValues<Preset[number]>>;
@@ -70,7 +65,7 @@ export function BaseCodeEditor({
   }, [value]);
 
   return (
-    <UIContainer $mini={mini}>
+    <div className={`gedit-m-code-editor-container ${mini ? 'mini' : ''}`}>
       <EditorProvider>
         <OriginCodeEditor
           defaultValue={String(value || '')}
@@ -101,6 +96,6 @@ export function BaseCodeEditor({
           {children}
         </OriginCodeEditor>
       </EditorProvider>
-    </UIContainer>
+    </div>
   );
 }

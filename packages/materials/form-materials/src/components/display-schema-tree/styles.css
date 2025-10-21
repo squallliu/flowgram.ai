@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-import styled, { css } from 'styled-components';
-
-export const TreeRow = styled.div`
+.gedit-m-display-schema-tree-row {
   display: flex;
   align-items: center;
 
-  .tree-icon {
+  & .tree-icon {
     margin-right: 8px;
     width: 14px;
     height: 14px;
@@ -17,14 +15,14 @@ export const TreeRow = styled.div`
 
   height: 27px;
   white-space: nowrap;
-`;
+}
 
-export const HorizontalLine = styled.div`
+.gedit-m-display-schema-tree-horizontal-line {
   position: relative;
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     background-color: var(--semi-color-text-3);
   }
@@ -35,14 +33,14 @@ export const HorizontalLine = styled.div`
     width: 15px;
     height: 1px;
   }
-`;
+}
 
-export const TreeTitle = styled.div`
-  // overflow: hidden;
-  // text-overflow: ellipsis;
-`;
+.gedit-m-display-schema-tree-title {
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
+}
 
-export const TreeLevel = styled.div`
+.gedit-m-display-schema-tree-level {
   padding-left: 30px;
   position: relative;
 
@@ -55,13 +53,13 @@ export const TreeLevel = styled.div`
     left: -22px;
     width: 1px;
   } */
-`;
+}
 
-export const TreeItem = styled.div<{ depth: number }>`
+.gedit-m-display-schema-tree-item {
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     background-color: var(--semi-color-text-3);
   }
@@ -80,11 +78,7 @@ export const TreeItem = styled.div<{ depth: number }>`
     left: -22px;
   }
 
-  ${(props) =>
-    props.depth === 0 &&
-    css`
-      &::before {
-        width: 0px !important;
-      }
-    `}
-`;
+  &.depth-0::before {
+    width: 0px !important;
+  }
+}

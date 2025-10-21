@@ -18,15 +18,7 @@ import {
 } from '@/components/condition-context';
 
 import { DBConditionOptionType, DBConditionRowValueType } from './types';
-import {
-  UIContainer,
-  UILeft,
-  UIOperator,
-  UIOptionLabel,
-  UIRight,
-  UISelect,
-  UIValues,
-} from './styles';
+import './styles.css';
 
 interface PropTypes {
   value?: DBConditionRowValueType;
@@ -67,7 +59,8 @@ export function DBConditionRow({
   });
 
   const renderDBOptionSelect = () => (
-    <UISelect
+    <Select
+      className="gedit-m-db-condition-row-select"
       disabled={readonly}
       size="small"
       style={{ width: '100%' }}
@@ -81,10 +74,10 @@ export function DBConditionRow({
       optionList={
         options?.map((item) => ({
           label: (
-            <UIOptionLabel>
+            <div className="gedit-m-db-condition-row-option-label">
               <Icon size="small" svg={typeManager.getDisplayIcon(item.schema)} />
               {item.label}
-            </UIOptionLabel>
+            </div>
           ),
           value: item.value,
         })) || []
@@ -114,11 +107,11 @@ export function DBConditionRow({
   );
 
   return (
-    <UIContainer style={style}>
-      <UIOperator>{renderOpSelect()}</UIOperator>
-      <UIValues>
-        <UILeft>{renderDBOptionSelect()}</UILeft>
-        <UIRight>
+    <div className="gedit-m-db-condition-row-container" style={style}>
+      <div className="gedit-m-db-condition-row-operator">{renderOpSelect()}</div>
+      <div className="gedit-m-db-condition-row-values">
+        <div className="gedit-m-db-condition-row-left">{renderDBOptionSelect()}</div>
+        <div className="gedit-m-db-condition-row-right">
           {targetSchema ? (
             <InjectDynamicValueInput
               readonly={readonly || !rule}
@@ -134,9 +127,9 @@ export function DBConditionRow({
               value={opConfig?.rightDisplay || I18n.t('Empty')}
             />
           )}
-        </UIRight>
-      </UIValues>
-    </UIContainer>
+        </div>
+      </div>
+    </div>
   );
 }
 

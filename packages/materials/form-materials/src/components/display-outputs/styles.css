@@ -3,10 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
-import styled from 'styled-components';
-
-export const DisplayInputsWrapper = styled.div`
+.gedit-m-display-outputs-wrapper {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
-`;
+}

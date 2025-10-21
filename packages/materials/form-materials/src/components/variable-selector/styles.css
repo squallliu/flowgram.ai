@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-.flowgram-variable-selector-root-title {
+.gedit-m-variable-selector-root-title {
   margin-right: 4px;
   min-width: 20px;
   overflow: hidden;
@@ -12,7 +12,7 @@
   color: var(--semi-color-text-2);
 }
 
-.flowgram-variable-selector-var-name {
+.gedit-m-variable-selector-var-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -22,7 +22,7 @@
   }
 }
 
-.flowgram-variable-selector-tag {
+.gedit-m-variable-selector-tag {
   width: 100%;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
   }
 }
 
-.flowgram-variable-selector-tree-select {
+.gedit-m-variable-selector-tree-select {
   outline: none;
 
   &.error {
@@ -56,7 +56,7 @@
   }
 }
 
-.flowgram-variable-selector-tag-pop {
+.gedit-m-variable-selector-tag-pop {
   padding: 10px;
   display: inline-flex;
   align-items: center;
@@ -64,7 +64,7 @@
   white-space: nowrap;
 }
 
-.flowgram-variable-selector-dropdown {
+.gedit-m-variable-selector-dropdown {
   max-height: 300px;
   overflow: auto;
 }

@@ -3,25 +3,22 @@
  * SPDX-License-Identifier: MIT
  */
 
-import styled from 'styled-components';
-import { Tag } from '@douyinfe/semi-ui';
-
-export const UIRootTitle = styled.div`
+.gedit-m-coze-editor-root-title {
   margin-right: 4px;
   min-width: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--semi-color-text-2);
-`;
+}
 
-export const UIVarName = styled.div`
+.gedit-m-coze-editor-var-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`;
+}
 
-export const UITag = styled(Tag)`
+.gedit-m-coze-editor-tag {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
@@ -34,11 +31,11 @@ export const UITag = styled(Tag)`
   &.semi-tag {
     margin: 0 5px;
   }
-`;
+}
 
-export const UIPopoverContent = styled.div`
+.gedit-m-coze-editor-popover-content {
   padding: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-`;
+}

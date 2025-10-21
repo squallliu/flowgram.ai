@@ -3,17 +3,15 @@
  * SPDX-License-Identifier: MIT
  */
 
-import styled from 'styled-components';
-
-export const UIRows = styled.div`
+.gedit-m-batch-outputs-rows {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 10px;
-`;
+}
 
-export const UIRow = styled.div`
+.gedit-m-batch-outputs-row {
   display: flex;
   align-items: center;
   gap: 5px;
-`;
+}

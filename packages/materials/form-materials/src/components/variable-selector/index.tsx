@@ -77,7 +77,7 @@ export const VariableSelector = ({
   return (
     <>
       <TreeSelect
-        className={`flowgram-variable-selector-tree-select ${hasError ? 'error' : ''}`}
+        className={`gedit-m-variable-selector-tree-select ${hasError ? 'error' : ''}`}
         dropdownMatchSelectWidth={false}
         disabled={readonly}
         treeData={treeData}
@@ -86,7 +86,7 @@ export const VariableSelector = ({
         clearIcon={null}
         style={style}
         validateStatus={hasError ? 'error' : undefined}
-        dropdownClassName="flowgram-variable-selector-dropdown"
+        dropdownClassName="gedit-m-variable-selector-dropdown"
         onChange={(_, _config) => {
           onChange((_config as TreeNodeData).keyPath as string[]);
         }}
@@ -94,7 +94,7 @@ export const VariableSelector = ({
           if (!_option?.keyPath) {
             return (
               <Tag
-                className="flowgram-variable-selector-tag"
+                className="gedit-m-variable-selector-tag"
                 prefixIcon={<IconIssueStroked />}
                 color="amber"
                 closable={!readonly}
@@ -108,7 +108,7 @@ export const VariableSelector = ({
           const rootIcon = renderIcon(_option.rootMeta?.icon || _option?.icon);
 
           const rootTitle = (
-            <div className="flowgram-variable-selector-root-title">
+            <div className="gedit-m-variable-selector-root-title">
               {_option.rootMeta?.title
                 ? `${_option.rootMeta?.title} ${_option.isRoot ? '' : '-'} `
                 : null}
@@ -119,24 +119,24 @@ export const VariableSelector = ({
             <div>
               <Popover
                 content={
-                  <div className="flowgram-variable-selector-tag-pop">
+                  <div className="gedit-m-variable-selector-tag-pop">
                     {rootIcon}
                     {rootTitle}
-                    <div className="flowgram-variable-selector-var-name">
+                    <div className="gedit-m-variable-selector-var-name">
                       {_option.keyPath.slice(1).join('.')}
                     </div>
                   </div>
                 }
               >
                 <Tag
-                  className="flowgram-variable-selector-tag"
+                  className="gedit-m-variable-selector-tag"
                   prefixIcon={rootIcon}
                   closable={!readonly}
                   onClose={() => onChange(undefined)}
                 >
                   {rootTitle}
                   {!_option.isRoot && (
-                    <div className="flowgram-variable-selector-var-name in-selector">
+                    <div className="gedit-m-variable-selector-var-name in-selector">
                       {_option.label}
                     </div>
                   )}
