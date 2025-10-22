@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-import { Field } from '@flowgram.ai/fixed-layout-editor';
+import { Field } from '@flowgram.ai/free-layout-editor';
 
 import { FreeFormMetaStoryBuilder, FormHeader } from '../../free-form-meta-story-builder';
 
@@ -22,7 +22,20 @@ export const BasicStory = () => (
       render: () => (
         <>
           <FormHeader />
-          <Field<any | undefined> name="db_condition_row">
+          <Field<any | undefined>
+            name="db_condition_row"
+            defaultValue={{
+              left: 'amount',
+              operator: 'gt',
+              right: {
+                type: 'constant',
+                content: 1000,
+                schema: {
+                  type: 'number',
+                },
+              },
+            }}
+          >
             {({ field }) => (
               <DBConditionRow
                 options={[
