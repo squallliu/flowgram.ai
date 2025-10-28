@@ -38,6 +38,7 @@ jobs:
         run: |
           LATEST_VERSION=${{ github.event.inputs.sdk-version }}
           echo "The package input version is ${{ github.event.inputs.sdk-version }}"
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
       - uses: actions/setup-node@v3
         with:
           node-version: 22
