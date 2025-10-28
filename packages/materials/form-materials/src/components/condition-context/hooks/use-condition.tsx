@@ -125,6 +125,10 @@ export function useCondition({
 
   // When type of target schema updated, clear it
   useEffect(() => {
+    if (!prevTargetSchemaRef.current) {
+      prevTargetSchemaRef.current = targetSchema;
+      return;
+    }
     if (prevTargetSchemaRef.current?.type !== targetSchema?.type) {
       onClearRight?.();
     }
