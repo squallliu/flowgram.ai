@@ -38,6 +38,31 @@
   }
 }
 
+.flowgram-logo-mask {
+  background-image: conic-gradient(from 180deg at 50% 50%, #4161a6, #5681bd, #4a9da3, #479590, #4161a6);
+  filter: blur(120px);
+  opacity: 0.4;
+  z-index: 0;
+  border-radius: 100%;
+  width: 80%;
+  height: 80%;
+  animation: flowgram-logo-spin 2s linear infinite;
+}
+
+@keyframes flowgram-logo-spin {
+  from {
+    transform: translateX(20%) translateY(20%) rotate(0deg) scale(0.8);
+  }
+
+  50% {
+    transform: translateX(20%) translateY(20%) rotate(180deg) scale(1);
+  }
+
+  to {
+    transform: translateX(20%) translateY(20%) rotate(360deg) scale(0.8);
+  }
+}
+
 .gedit-playground {
   background: transparent !important;
 }

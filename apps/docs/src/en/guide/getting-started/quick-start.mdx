@@ -6,7 +6,7 @@ import {
 } from '@theme';
 
 :::info
-To quickly experience FlowGram.AI, you can directly [open it in CodeSandbox](https://codesandbox.io/p/github/louisyoungx/flowgram-demo/main).
+To quickly experience FlowGram.AI, you can directly [open it in CodeSandbox](https://codesandbox.io/p/github/louisyoungx/flowgram-demo/main) or [open it in StackBlitz](https://stackblitz.com/~/github.com/louisyoungx/flowgram-demo).
 :::
 
 Choose a way to start:

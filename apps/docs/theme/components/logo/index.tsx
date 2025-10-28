@@ -10,11 +10,13 @@ import { FreeLayoutEditorProvider, EditorRenderer } from '@flowgram.ai/free-layo
 import './index.less';
 
 import { useEditorProps } from './use-editor-props';
+import { FlowGramLogoMask } from './musk';
 
 export const FlowGramLogo = () => {
   const editorProps = useEditorProps();
   return (
     <div className="flowgram-logo-container">
+      <FlowGramLogoMask />
       <FreeLayoutEditorProvider {...editorProps}>
         <EditorRenderer />
       </FreeLayoutEditorProvider>

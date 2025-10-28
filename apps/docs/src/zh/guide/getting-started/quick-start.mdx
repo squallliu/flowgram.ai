@@ -6,7 +6,7 @@ import {
 } from '@theme';
 
 :::info
-快速体验 FlowGram.AI，你可以直接 [在 CodeSandbox 中打开](https://codesandbox.io/p/github/louisyoungx/flowgram-demo/main)
+快速体验 FlowGram.AI，你可以直接 [在 CodeSandbox 中打开](https://codesandbox.io/p/github/louisyoungx/flowgram-demo/main) 或者 [在 StackBlitz 中打开](https://stackblitz.com/~/github.com/louisyoungx/flowgram-demo)
 :::
 
 选择开始方式：

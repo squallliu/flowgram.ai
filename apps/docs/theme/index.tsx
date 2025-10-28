@@ -3,14 +3,12 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
 import { LlmsContainer, LlmsCopyButton, LlmsViewOptions } from '@rspress/plugin-llms/runtime';
 import {
   HomeLayout as BaseHomeLayout,
   getCustomMDXComponent as basicGetCustomMDXComponent,
 } from '@rspress/core/theme';
-import { NoSSR, removeBase, useLocation, usePageData } from '@rspress/core/runtime';
+import { NoSSR, useDark } from '@rspress/core/runtime';
 
 import { Background } from './components/background';
 
@@ -36,15 +34,13 @@ function getCustomMDXComponent() {
 }
 
 function HomeLayout(props: Parameters<typeof BaseHomeLayout>[0]) {
-  const { pathname } = useLocation();
-  const isZh = pathname.startsWith('/zh/');
-  const { page } = usePageData();
+  const isDark = useDark();
 
   return (
     <>
       <div className="home-layout-container">
         <NoSSR>
-          <Background />
+          {isDark && <Background />}
           <FlowGramLogo />
         </NoSSR>
         <BaseHomeLayout {...props} afterHero={null} afterHeroActions={null} />
