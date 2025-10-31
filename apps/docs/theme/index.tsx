@@ -14,6 +14,7 @@ import { Background } from './components/background';
 
 import './theme.css';
 import { FlowGramLogo } from './components/logo';
+import { useIsMobile } from './use-is-mobile';
 
 function getCustomMDXComponent() {
   const { h1: H1, ...components } = basicGetCustomMDXComponent();
@@ -35,12 +36,13 @@ function getCustomMDXComponent() {
 
 function HomeLayout(props: Parameters<typeof BaseHomeLayout>[0]) {
   const isDark = useDark();
+  const isMobile = useIsMobile();
 
   return (
     <>
       <div className="home-layout-container">
         <NoSSR>
-          {isDark && <Background />}
+          {isDark && !isMobile && <Background />}
           <FlowGramLogo />
         </NoSSR>
         <BaseHomeLayout {...props} afterHero={null} afterHeroActions={null} />

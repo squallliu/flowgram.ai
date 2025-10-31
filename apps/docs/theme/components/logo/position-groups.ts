@@ -72,7 +72,7 @@ export const positionGroups: PositionGroup[] = [
   // 弧形形态
   {
     '1': {
-      x: 50,
+      x: 40,
       y: -30,
     },
     '2': {
@@ -80,11 +80,11 @@ export const positionGroups: PositionGroup[] = [
       y: -50,
     },
     '3': {
-      x: 190,
+      x: 200,
       y: -50,
     },
     '4': {
-      x: 260,
+      x: 280,
       y: -30,
     },
   },

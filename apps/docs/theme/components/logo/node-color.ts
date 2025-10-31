@@ -11,8 +11,15 @@ export const NodeColorMap: Record<string, string> = {
 };
 
 export const NodeBorderColorMap: Record<string, string> = {
-  '1': '#294685',
-  '2': '#365f99',
-  '3': '#39959c',
-  '4': '#599e99',
+  '1': '#355397',
+  '2': '#426ca7',
+  '3': '#46a6ac',
+  '4': '#7cbab6',
+};
+
+export const NodeGlowColorMap: Record<string, string> = {
+  '1': '141, 178, 254',
+  '2': '145, 190, 254',
+  '3': '155, 248, 254',
+  '4': '191, 255, 250',
 };
