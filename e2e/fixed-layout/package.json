@@ -10,7 +10,7 @@
     "e2e:update-screenshot": "npx playwright test --update-snapshots"
   },
   "dependencies": {
-    "@playwright/test": "^1.52.0"
+    "@playwright/test": "^1.55.1"
   },
   "devDependencies": {
     "@flowgram.ai/eslint-config": "workspace:*",
