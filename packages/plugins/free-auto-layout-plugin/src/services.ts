@@ -89,7 +89,9 @@ export class AutoLayoutService {
     const blocks = node.blocks.filter((blockNode) =>
       options.filterNode ? options.filterNode?.({ node: blockNode, parent: node.parent }) : true
     );
-    const edges = this.getNodesAllLines(blocks);
+    const edges = this.getNodesAllLines(blocks).filter((edge) =>
+      options.filterLine ? options.filterLine?.({ line: edge }) : true
+    );
 
     // 创建子布局节点
     const layoutNodes = this.createLayoutNodes(blocks, options);
@@ -124,7 +126,7 @@ export class AutoLayoutService {
   /** 创建线条布局数据 */
   private createLayoutEdge(edge: WorkflowLineEntity): LayoutEdge | undefined {
     const { from, to } = edge.info;
-    if (!from || !to || edge.vertical) {
+    if (!from || !to) {
       return;
     }
     const layoutEdge: LayoutEdge = {
