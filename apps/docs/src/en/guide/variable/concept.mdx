@@ -7,26 +7,35 @@ description: Introduces the core concepts of the variable engine.
 
 :::tip
 
-The variable engine has many abstract concepts. This article uses 🌟 to mark a batch of concepts that you can **prioritize understanding**.
+Complete [Output Variables](./variable-output.mdx) → [Consume Variables](./variable-consume.mdx) first, then come back to this article as a reference manual. We use 🌟 to highlight concepts worth mastering early.
 
 :::
 
+## Reading Path
+
+- Skim the terminology navigator below to confirm the term you need is covered.
+- Study the “Core Concepts” diagram to link variables, scopes, and AST into one picture.
+- Jump to the sections you need based on the problem at hand—no need to read in order.
+
 :::info{title="📖 Quick Terminology Lookup"}
 
-- [**Variable**](#variable) 🌟
-- [**Scope**](#scope-) 🌟: A container that aggregates a series of variable information and maintains dependencies with other scopes.
-- [**AST**](#ast-) 🌟: Scopes use AST to store variable information.
-- [**ASTNode**](#astnode): The basic unit for storing variable information.
-- [**ASTNodeJSON**](#astnodejson): The JSON representation of an ASTNode.
-- [**Declaration**](#declaration) 🌟: Identifier + Definition.
-- [**Type**](#type) 🌟: Constraints on the value of a variable.
-- [**Expression**](#expression): Combines several variables in a specific way to return a new variable.
-- [**Scope Chain**](#scope-chain): Defines which scopes' variables a scope can reference.
-- [**Dependency Scope**](#dependency-scope): Which scopes' output variables a scope can access.
-- [**Covering Scope**](#covering-scope): Which scopes can access the output variables of a scope.
-- [**Node Scope**](#node-scope) 🌟: Can access the output variables of upstream nodes, and its output variables can also be accessed by downstream nodes.
-- [**Node Private Scope**](#node-private-scope): The node's private scope can only be accessed by the node itself or its child nodes.
-- [**Global Scope**](#global-scope): Variables in the global scope can be accessed by all node scopes.
+- **Core Ideas**
+  - [Variable](#variable) 🌟: A data container defined during design and evaluated at runtime.
+  - [Scope](#scope-) 🌟: A container for variables that also maintains relationships with other scopes.
+  - [AST](#ast-) 🌟: The structured storage used to keep variable information inside a scope.
+- **AST Related**
+  - [ASTNode](#astnode): Nodes in the AST tree, each describing a piece of variable information.
+  - [ASTNodeJSON](#astnodejson): The JSON serialization of an ASTNode.
+  - [Declaration](#declaration) 🌟: Identifier + definition, the smallest information unit in the variable engine.
+  - [Type](#type) 🌟: A definition that constrains the range of possible values for a variable.
+  - [Expression](#expression): Consumes variables and produces a new one.
+- **Scope Relationships**
+  - [Scope Chain](#scope-chain): Determines which other scopes a scope can read variables from.
+  - [Dependency Scope](#dependency-scope): The upstream scopes whose outputs are readable here.
+  - [Covering Scope](#covering-scope): The downstream scopes that can read this scope’s outputs.
+  - [Node Scope](#node-scope) 🌟: The public variable set of a node.
+  - [Node Private Scope](#node-private-scope): Variables only accessible to the node and its children.
+  - [Global Scope](#global-scope): Shared variables readable from every scope.
 
 :::
 
@@ -34,14 +43,29 @@ The variable engine has many abstract concepts. This article uses 🌟 to mark a
 
 ## Core Concepts
 
-The core concepts of the variable engine can be summarized in the following diagram:
+You can connect the variable engine’s core concepts through the diagram below:
 
 <img src="/variable/concept/concepts-en.png" alt="Variable Core Concepts Relationship Diagram" width="600" />
+
+:::info{title="How to read the diagram"}
+
+- Green nodes represent **what the information is**, such as variables, types, or expressions.
+- Red nodes represent **how the information is stored**, namely AST nodes.
+- Purple nodes represent **where the information lives**, i.e., scopes.
+- Dashed nodes and lines depict **how the information flows**, which is the scope chain.
+
+:::
+
+To keep things tangible, hold on to one real-world case:
+
+> A “Batch” node reads the array output from an upstream HTTP node → iterates to produce `item` → and continues using `item` inside its child nodes.
+
+Every concept mentioned in that workflow appears below, so feel free to cross-reference as you read.
 
 
 ### Variable
 
-See [Variable Introduction](./basic.mdx) for details.
+Variables are containers defined during design time and evaluated during runtime. See [Variable Introduction](./basic.mdx) for a deeper primer.
 
 :::warning{title="⚠️ Different Focus on Variables in Design and Runtime"}
 
@@ -51,9 +75,9 @@ See [Variable Introduction](./basic.mdx) for details.
 
 ### Scope 🌟
 
-A Scope is a **container**: it aggregates a series of **variable information** and maintains **dependencies with other scopes**.
+A scope is a **container** that bundles **variable information** and keeps track of **relationships with other scopes**. In short, a scope decides “who can access which variables.”
 
-The range of a scope can be defined according to different business scenarios:
+Its boundaries vary by business scenario; the three most common cases are:
 
 | Scene | Example |
 | :--- | :--- |
@@ -65,26 +89,26 @@ The range of a scope can be defined according to different business scenarios:
 
 :::warning{title="Why does FlowGram abstract the concept of a scope outside of nodes?"}
 
-1. A node is not equivalent to a scope.
-2. Some scopes (e.g., global scope) are not related to nodes.
-3. A node can have multiple scopes (e.g., loop private scope).
+1. Node ≠ scope: a single node may need both a public scope and a private one.
+2. Some scopes, like the global drawer, live outside of any node.
+3. Certain nodes require multiple layers of scopes (e.g., a loop’s private scope), which can’t be expressed with the node concept alone.
 
 :::
 
 ### AST 🌟
 
-A Scope stores variable information through an `AST`.
+Scopes store variable information through an `AST`. Treat it as a tree where each node describes a declaration, type, or expression.
 
 :::tip
 
-You can access the `AST` tree within a scope via `scope.ast` to perform CRUD operations on variable information.
+Through `scope.ast` you can access the tree inside a scope and perform CRUD operations on variable information.
 
 :::
 
 
 #### ASTNode
 
-`ASTNode` is the **basic information unit** used in the variable engine to **store variable information**. It can model various **variable information**, including:
+`ASTNode` is the **basic information unit** used in the variable engine to **store variable information**. It can model various **pieces of information**:
 
 - **Declarations**: such as `VariableDeclaration`, used to declare new variables.
 - **Types**: such as `StringType`, used to represent the String type.
@@ -101,9 +125,9 @@ You can access the `AST` tree within a scope via `scope.ast` to perform CRUD ope
 
 #### ASTNodeJSON
 
-`ASTNodeJSON` is the **pure JSON serialization** representation of an `ASTNode`.
+`ASTNodeJSON` is the **pure JSON serialization** of an `ASTNode`. We usually construct it on the design side and let the variable engine instantiate it later.
 
-`ASTNodeJSON` includes a `kind` field to indicate the type of the `ASTNode`:
+Its most important field is `kind`, which indicates the type of the `ASTNode`:
 
 ```tsx
 /**
@@ -117,7 +141,7 @@ You can access the `AST` tree within a scope via `scope.ast` to perform CRUD ope
 }
 ```
 
-When using the variable engine, users describe variable information with `ASTNodeJSON`, which is then **instantiated** into an `ASTNode` by the variable engine and added to the scope.
+When using the variable engine, we describe variable information with `ASTNodeJSON`. The engine then **instantiates** it into an `ASTNode` and stores it in the scope.
 
 ```tsx
 /**
@@ -187,12 +211,12 @@ ASTFactory.createVariableDeclaration({
 
 
 
-### Declaration
+### Declaration 🌟
 
-Declaration = Identifier (Key) + Definition. In design mode, a declaration is an `ASTNode` that stores an identifier and its definition.
+Declaration = Identifier (Key) + Definition. In design mode, a declaration is an `ASTNode` that stores an identifier plus variable information—the smallest unit that can be referenced.
 
-- Identifier (Key): The index for accessing the declaration.
-- Definition: The information defined by the declaration. For example, a variable's definition = type + right-hand value.
+- Identifier (Key): The index used to access a declaration.
+- Definition: The information carried by the declaration. For a variable, the definition = type + right-hand value.
 
 
 :::info{title="Example: Declarations in JavaScript"}
@@ -253,9 +277,9 @@ The variable engine currently only provides **variable field declaration** (`Bas
 
 
 
-### Type
+### Type 🌟
 
-Types are used to **constrain the range of variable values**. In design mode, a type is an `ASTNode`.
+Types **constrain the range of variable values**. In design mode, a type is also an `ASTNode`. Understanding types helps you reason about what a variable can store and what an expression returns.
 
 The variable engine has built-in **basic types** from JSON:
 - `StringType`: string
@@ -271,7 +295,7 @@ It also adds:
 
 ### Expression
 
-An expression takes **0 or more variables as input**, computes them in a **specific way**, and returns a new **variable**.
+An expression takes **0 or more variables as input**, processes them in a **specific way**, and returns a new **variable**. Design time only records “who it depends on” and the inferred return type—runtime handles the actual value calculation.
 
 ```mermaid
 graph LR
@@ -284,7 +308,7 @@ Expression --returns--> Output_Variable
 style Expression stroke:#333,stroke-width:3px;
 ```
 
-In **design mode**, an expression is an `ASTNode`. In modeling, we only need to focus on:
+In **design mode**, an expression is an `ASTNode`. Modeling focuses on:
 
 - Which variable declarations does the expression **use**?
 - How is the expression's **return type** inferred?
@@ -370,21 +394,21 @@ graph LR
 
 ### Scope Chain
 
-The Scope Chain defines **which scopes' variables a scope can reference**. It is an abstract class, and specific business scenarios can implement custom scope chains.
+The scope chain defines **which other scopes a scope can read variables from**. Think of it as the whitelist for variable access. The variable engine exposes an abstract class, and product teams can implement custom scope chains as needed.
 
-The variable engine has built-in implementations for two types of scope chains: **free-layout scope chain** and **fixed-layout scope chain**.
+Out of the box, the engine ships with **free-layout** and **fixed-layout** scope chain implementations.
 
 
 #### Dependency Scope
 
-`Dependency Scope` = Which scopes' output variables a scope can access.
+`Dependency scope` = the upstream scopes whose output variables the current scope can access.
 
 You can access a scope's `Dependency Scope` via `scope.depScopes`.
 
 
 #### Covering Scope
 
-`Covering Scope` = Which scopes can access the output variables of a scope.
+`Covering scope` = the downstream scopes that can access the current scope’s output variables.
 
 You can access a scope's `Covering Scope` via `scope.coverScopes`.
 
@@ -393,7 +417,7 @@ You can access a scope's `Covering Scope` via `scope.coverScopes`.
 
 FlowGram defines the following special types of scopes in the canvas:
 
-### Node Scope
+### Node Scope 🌟
 
 Also known as `Node Public Scope`, this scope can access the variables of the `Node Scope` of **upstream nodes**, and its output variable declarations can also be accessed by the `Node Scope` of **downstream nodes**.
 
@@ -457,7 +481,7 @@ graph BT
 
 ### Global Scope
 
-Variables in the `Global Scope` can be accessed by **all node scopes and node private scopes**, but it cannot access variables from other scopes.
+Variables in the `Global Scope` are readable from **all node scopes and node private scopes**, yet the global scope itself **does not depend on any other scope**. It’s ideal for configuration, constants, environment context, and other shared data.
 
 For how to set the global scope, see [Output Global Variables](./variable-output#output-global-variables). Its scope chain relationship is shown in the figure below:
 
@@ -489,18 +513,18 @@ graph RL
 
 ![Architecture Diagram](/variable/concept/arch-en.png)
 
-The variable engine is designed following the DIP (Dependency Inversion Principle) and is divided into three layers according to code stability, abstraction level, and proximity to the business:
+The variable engine follows the Dependency Inversion Principle (DIP) and is split into three layers according to code stability, abstraction level, and proximity to business logic:
 
 ### Variable Abstraction Layer
 
-This is the highest abstraction level in the variable architecture and the most stable part of the code. The abstraction layer defines abstract classes for core concepts such as `ASTNode`, `Scope`, and `ScopeChain`.
+This abstraction layer is the most stable part of the architecture. It defines the core interfaces—`ASTNode`, `Scope`, `ScopeChain`, and more—that upper layers extend.
 
 ### Variable Implementation Layer
 
-This part of the variable architecture changes more frequently and may be adjusted for different business needs. The engine has a built-in set of stable `ASTNode` implementations and `ScopeChain` implementations. When users have complex variable requirements, they can register new `ASTNode`s or override existing `ASTNode`s through dependency injection for customization.
+This layer sits closer to product requirements and evolves more often. The engine provides a set of built-in `ASTNode` and `ScopeChain` implementations, and you can register new ones or override defaults via dependency injection when your domain demands it.
 
 ### Variable Material Layer
 
-Based on the Facade pattern, this layer improves the usability of variables by encapsulating complex variable logic into simple, out-of-the-box variable materials.
+The outermost layer adopts the Facade pattern to boost usability, packaging complex capabilities into “materials” that can be reused directly.
 
 - For the use of variable materials, see: [Materials](/materials/introduction)

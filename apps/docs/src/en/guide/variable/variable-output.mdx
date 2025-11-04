@@ -10,15 +10,37 @@ We primarily categorize output variables into three types:
 2. **Output Node Private Variables**: Output variables limited to the node's interior (including child nodes) and not accessible by external nodes.
 3. **Output Global Variables**: Available throughout the entire flow, readable by any node, suitable for storing public states or configurations.
 
+:::info{title="Reading Guide"}
+
+- After [Variable Introduction](./basic.mdx), start here to practice how variables are produced.
+- If you work from form configuration, begin with “Method 1: Synchronization via Form Side Effects.” If you need runtime logic or batch updates, skip to the plugin or UI sections.
+- Every example uses `ASTFactory`; revisit [Core Concepts – AST](./concept#ast-) if you need a refresher.
+
+:::
+
 ## Output Node Variables
 
-Output node variables are bound to the lifecycle of the current node. When a node is created, the variables are born; when a node is deleted, the variables disappear with it.
+Output node variables are bound to the lifecycle of the current node: they are created with the node and removed when the node is deleted. (See [Node Scope](./concept#node-scope) for details.)
 
 We typically have three ways to output node variables:
+
+:::info{title="How to pick a method"}
+
+- Variable definitions tied to form inputs → Method 1.
+- Variables generated at runtime or synchronized in batches → Method 2.
+- Writing variables directly in UI is only for temporary debugging; avoid Method 3 in production.
+
+:::
 
 ### Method 1: Synchronization via Form Side Effects
 
 [Form side effects](/guide/form/form#side-effects-effect) are usually configured in the node's `form-meta.ts` file and are the most common way to define node output variables.
+
+:::info{title="When to use it"}
+
+- The node’s variable model can be derived from form fields.
+
+:::
 
 #### `provideJsonSchemaOutputs`
 
@@ -196,7 +218,7 @@ export const formMeta = {
             meta: {
               title: `Title_${value}`,
             },
-            key: `uid_${node.id}`,
+            key: `uid_${context.node.id}`,
             type: ASTFactory.createString(),
           })
         )
@@ -216,7 +238,7 @@ export const formMeta = {
             meta: {
               title: `Title_${value}`,
             },
-            key: `uid_${node.id}_2`,
+            key: `uid_${context.node.id}_2`,
             type: ASTFactory.createNumber(),
           })
         )
@@ -235,6 +257,13 @@ export const formMeta = {
 ### Method 2: Synchronizing Variables via Plugins
 
 In addition to static configuration in forms, we can also freely and dynamically manipulate node variables in plugins through `node.scope`.
+
+:::info{title="When to use it"}
+
+- You need to create or adjust variables across multiple nodes in bulk.
+- You want to auto-populate default variables when the canvas initializes.
+
+:::
 
 #### Updating via Specified Node's Scope
 
@@ -363,7 +392,13 @@ export const formMeta = {
 
 ## Output Node Private Variables
 
-Private variables are variables that can only be accessed within the current node and its child nodes. (See: [Node Private Scope](./concept#node-private-scope))
+Private variables are variables that can only be accessed within the current node and its child nodes. (See [Node Private Scope](./concept#node-private-scope).)
+
+:::tip
+
+Quick rule of thumb: if a variable only serves the node’s internal implementation and shouldn’t be exposed downstream, keep it in `node.privateScope`.
+
+:::
 
 Here we only list two methods, and other methods can be inferred from [Output Node Variables](#output-node-variables).
 
@@ -386,7 +421,7 @@ export const formMeta =  {
     'path.to.value': createEffectFromVariableProvider({
       scope: 'private',
       // parse form value to variable
-      parse(v: string) {
+      parse(v: string, { node }) {
         return [{
           meta: {
             title: `Private_${v}`,
@@ -422,7 +457,7 @@ export const formMeta = {
             meta: {
               title: `Your Private Variable Title`,
             },
-            key: `uid_${node.id}`,
+            key: `uid_${context.node.id}`,
             type: ASTFactory.createInteger(),
           })
         )
@@ -440,7 +475,15 @@ export const formMeta = {
 
 ## Output Global Variables
 
-Global variables are like the "shared memory" of the entire flow, accessible and modifiable by any node or plugin. They are very suitable for storing states that run through the entire flow, such as user information, environment configurations, etc.
+Global variables are like the “shared memory” of the entire flow—any node or plugin can read and modify them. They work well for state that persists across the flow, such as user information or environment configuration. (See [Global Scope](./concept#global-scope).)
+
+:::info{title="When to choose the global scope"}
+
+- The variable is reused across multiple nodes or even plugins.
+- The variable should be decoupled from a specific node (e.g., environment config, user context).
+- You need to write it during initialization so downstream nodes can simply read it.
+
+:::
 
 Similar to node variables, we also have two main ways to obtain the global variable scope (`GlobalScope`).
 

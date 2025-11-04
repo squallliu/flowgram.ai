@@ -6,6 +6,14 @@ description: 介绍如何在 FlowGram 中消费变量引擎输出的变量
 
 在 FlowGram 中，当一个节点想要使用到前序节点的变量，就需要消费变量。
 
+:::info{title="阅读提示"}
+
+- 建议先完成[输出变量](./variable-output.mdx)，确保知道变量是如何被产出的；本篇作为第二站，专注于「如何拿到变量」。
+- 如果想快速看看变量选择器的效果，可先用用 [VariableSelector](#variableselector)；若需要在代码里拿到变量列表，再继续阅读后续 API 章节。
+- 本文示例默认使用「节点作用域」。涉及节点私有或全局作用域时，可随时参考[核心概念 - 画布中的变量](./concept#画布中的变量)补充理解。
+
+:::
+
 ## `VariableSelector`
 
 为了让你能更轻松地在应用中集成变量选择的功能，官方物料提供了 `VariableSelector` 组件。
@@ -16,6 +24,14 @@ description: 介绍如何在 FlowGram 中消费变量引擎输出的变量
 ## 获取可访问的变量树
 
 在画布的节点中，我们常常需要获取**当前作用域下可用的变量**，并将它们以树形结构展示出来，方便用户进行选择和操作。
+
+:::info{title="常见需求拆解"}
+
+- **仅需要展示变量列表** → `useAvailableVariables`
+- **需要展示并响应对象/数组的下钻字段** → `ASTMatch` + 递归渲染
+- **需要精准订阅指定变量/监听变化** → 直接操作 `scope.available`
+
+:::
 
 ### `useAvailableVariables`
 
@@ -44,6 +60,12 @@ return availableVariables.map(renderVariable);
 
 当变量的类型是 `Object` 时，我们往往需要能够“下钻”到它的内部，获取其属性。`ASTMatch.isObject` 方法可以帮助我们判断一个变量类型是否为对象。如果是，我们就可以递归地渲染它的 `properties`。
 
+:::tip
+
+变量树的每一层其实都是「声明」(`BaseVariableField`)。在对象场景下，`properties` 就是下一级声明数组。
+
+:::
+
 ```tsx pure title="use-variable-tree.tsx" {12}
 import {
   type BaseVariableField,
@@ -66,6 +88,8 @@ const renderVariable = (variable: BaseVariableField) => ({
 ### 获取 Array 类型变量的下钻
 
 与 `Object` 类型类似，当遇到 `Array` 类型的变量时，我们也希望能展示它的内部结构。对于数组，我们通常关心的是其元素的类型。`ASTMatch.isArray` 可以判断变量类型是否为数组。值得注意的是，数组的元素类型可能是任意的，甚至可能是另一个数组。因此，我们需要一个递归的辅助函数 `getTypeChildren` 来处理这种情况。
+
+
 
 ```tsx pure title="use-variable-tree.tsx" {13,16}
 import {
@@ -102,6 +126,14 @@ const renderVariable = (variable: BaseVariableField) => ({
 
 `scope.available` 是变量系统的核心之一，可以对 **作用域内可用变量** 进行更加高级的变量获取和监听动作。
 
+:::info{title="何时直接用 scope.available？"}
+
+- 需要通过 keyPath 精确读取或校验变量。
+- 需要在 Hook 之外（如插件、服务）操作变量可见性。
+- 需要订阅变量变化但不希望整个列表刷新。
+
+:::
+
 ### `useScopeAvailable`
 
 `useScopeAvailable` 能够在 React 中直接返回 `scope.available`
@@ -118,7 +150,7 @@ console.log(available.variables);
 console.log(available.getByKeyPath(['start_0', 'xxx']));
 
 // 监听单个变量的变化
-available.trackByKeyPath(['start_0', xxx], () => {
+available.trackByKeyPath(['start_0', 'xxx'], () => {
   // ...
 })
 ```
@@ -170,7 +202,13 @@ const validateVariableInNode = (keyPath: string, node: FlowNodeEntity) => {
 
 当你只关心某个特定变量字段（包括嵌套在 Object 或 Array 中的变量）的变化时，`trackByKeyPath` 能让你精准地“订阅”这个变量的更新，而不会因为其他不相关变量的变化导致组件重新渲染，从而实现更精细的性能优化。
 
-```tsx {6,13-17}
+:::tip
+
+配合 `autoRefresh: false` 使用时，可以避免大范围刷新，只在订阅的变量变化时手动更新组件状态。
+
+:::
+
+```tsx {6,13-18}
 import { useScopeAvailable } from '@flowgram.ai/fixed-layout-editor';
 import { useEffect, useState } from 'react';
 
@@ -262,7 +300,7 @@ function AdvancedListenerComponent() {
 ### `useOutputVariables`
 
 
-useOutputVariables 可以获取**当前作用域的输出变量**，并在输出变量列表或者下钻变化时**自动触发刷新**
+`useOutputVariables` 可以获取**当前作用域的输出变量**，并在输出变量列表或者下钻变化时**自动触发刷新**。
 
 ```tsx
 const variables = useOutputVariables();
@@ -293,7 +331,7 @@ const variables = scope.variables;
 
 ### 获取当前作用域
 
-可以通过 [`useCurrentScope`](https://flowgram.ai/auto-docs/editor/functions/useCurrentScope)，获取当前的作用域。
+可以通过 [`useCurrentScope`](https://flowgram.ai/auto-docs/editor/functions/useCurrentScope) 获取当前的作用域。
 
 ```tsx
 const scope = useCurrentScope()
@@ -306,7 +344,7 @@ scope.available
 
 ### 设定当前作用域
 
-可以通过 [`ScopeProvider`](https://flowgram.ai/auto-docs/editor/functions/ScopeProvider) 设定当前作用域
+可以通过 [`ScopeProvider`](https://flowgram.ai/auto-docs/editor/functions/ScopeProvider) 设定当前作用域。
 
 ```tsx
 // set the scope of current node
