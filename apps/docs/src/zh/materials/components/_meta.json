@@ -1,6 +1,7 @@
 [
   "type-selector",
   "json-schema-editor",
+  "json-schema-creator",
   "variable-selector",
   "dynamic-value-input",
   "condition-row",

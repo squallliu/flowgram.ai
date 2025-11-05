@@ -53,6 +53,7 @@ export {
   JsonEditorWithVariables,
   type JsonEditorWithVariablesProps,
 } from './json-editor-with-variables';
+export { JsonSchemaCreator, type JsonSchemaCreatorProps } from './json-schema-creator';
 export { JsonSchemaEditor } from './json-schema-editor';
 export { PromptEditor, type PromptEditorPropsType } from './prompt-editor';
 export {
