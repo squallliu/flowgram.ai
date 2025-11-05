@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-import { FieldArray, FieldArrayRenderProps } from '@flowgram.ai/editor';
+import { FieldArray } from '@flowgram.ai/editor';
 import { Button } from '@douyinfe/semi-ui';
 import { IconPlus } from '@douyinfe/semi-icons';
 
@@ -14,15 +14,16 @@ import { AssignRow, AssignValueType } from '@/components/assign-row';
 interface AssignRowsProps {
   name: string;
   readonly?: boolean;
+  defaultValue?: AssignValueType[];
 }
 
 export function AssignRows(props: AssignRowsProps) {
-  const { name, readonly } = props;
+  const { name, readonly, defaultValue } = props;
 
   return (
-    <FieldArray name={name}>
-      {({ field }: FieldArrayRenderProps<AssignValueType | undefined>) => (
-        <>
+    <FieldArray<AssignValueType | undefined> name={name} defaultValue={defaultValue}>
+      {({ field }) => (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
           {field.map((childField, index) => (
             <AssignRow
               key={childField.key}
@@ -52,7 +53,7 @@ export function AssignRows(props: AssignRowsProps) {
               Declaration
             </Button>
           </div>
-        </>
+        </div>
       )}
     </FieldArray>
   );

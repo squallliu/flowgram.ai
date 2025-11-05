@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 
 import { IJsonSchema, JsonSchemaTypeManager, JsonSchemaUtils } from '@flowgram.ai/json-schema';
 import { useCurrentScope, useRefresh } from '@flowgram.ai/editor';
@@ -17,13 +17,14 @@ interface PropsType {
   showIconInTree?: boolean;
   displayFromScope?: boolean;
   typeManager?: JsonSchemaTypeManager;
+  style?: React.CSSProperties;
 }
 
-export function DisplayOutputs({ value, showIconInTree, displayFromScope }: PropsType) {
+export function DisplayOutputs({ value, showIconInTree, displayFromScope, style }: PropsType) {
   const scope = useCurrentScope();
   const refresh = useRefresh();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!displayFromScope || !scope) {
       return () => null;
     }
@@ -50,7 +51,7 @@ export function DisplayOutputs({ value, showIconInTree, displayFromScope }: Prop
   const childEntries = Object.entries(properties || {});
 
   return (
-    <div className="gedit-m-display-outputs-wrapper">
+    <div className="gedit-m-display-outputs-wrapper" style={style}>
       {childEntries.map(([key, schema]) => (
         <DisplaySchemaTag
           key={key}
