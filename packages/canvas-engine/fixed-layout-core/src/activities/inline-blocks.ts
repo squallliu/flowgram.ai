@@ -27,11 +27,21 @@ export const InlineBlocksRegistry: FlowNodeRegistry = {
     hidden: true,
     spacing: (node) => getDefaultSpacing(node.entity, ConstantKeys.NODE_SPACING),
     isInlineBlocks: true,
-    inlineSpacingPre: (node) =>
-      getDefaultSpacing(node.entity, ConstantKeys.INLINE_BLOCKS_PADDING_TOP) ||
-      DEFAULT_SPACING.INLINE_BLOCKS_PADDING_TOP,
-    inlineSpacingAfter: (node) =>
-      getDefaultSpacing(node.entity, ConstantKeys.INLINE_BLOCKS_PADDING_BOTTOM),
+    inlineSpacingPre: (transform) => {
+      if (transform.entity.blocks.length === 0) {
+        return 0;
+      }
+      return (
+        getDefaultSpacing(transform.entity, ConstantKeys.INLINE_BLOCKS_PADDING_TOP) ||
+        DEFAULT_SPACING.INLINE_BLOCKS_PADDING_TOP
+      );
+    },
+    inlineSpacingAfter: (transform) => {
+      if (transform.entity.blocks.length === 0) {
+        return 0;
+      }
+      return getDefaultSpacing(transform.entity, ConstantKeys.INLINE_BLOCKS_PADDING_BOTTOM);
+    },
   },
   /**
    * 控制子分支的间距

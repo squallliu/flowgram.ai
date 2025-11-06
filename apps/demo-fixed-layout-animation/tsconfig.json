@@ -24,9 +24,15 @@
       "dom",
       "es2020",
       "es2019.Array"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+    }
   },
   "include": [
-    "./src",
+    "./src"
   ],
 }

@@ -305,6 +305,14 @@
 			"shellCommand": "concurrently --kill-others --raw --prefix \"{name}\" --names [watch],[demo] -c white,blue \"rush build:watch --to-except @flowgram.ai/demo-fixed-layout\" \"cd apps/demo-fixed-layout && rushx ts-check && rushx dev\""
 		},
 		{
+			"name": "dev:demo-fixed-layout-animation",
+			"commandKind": "global",
+			"summary": "⭐️️ run dev in app/demo-fixed-layout-animation",
+			"autoinstallerName": "rush-commands",
+			"safeForSimultaneousRushProcesses": true,
+			"shellCommand": "concurrently --kill-others --raw --prefix \"{name}\" --names [watch],[demo] -c white,blue \"rush build:watch --to-except @flowgram.ai/demo-fixed-layout-animation\" \"cd apps/demo-fixed-layout-animation && rushx ts-check && rushx dev\""
+		},
+		{
 			"name": "dev:demo-fixed-layout-simple",
 			"commandKind": "global",
 			"summary": "⭐️️ run dev in app/demo-fixed-layout-simple",
