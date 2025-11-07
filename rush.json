@@ -473,16 +473,6 @@
             "versionPolicyName": "appPolicy"
         },
         {
-            "packageName": "@flowgram.ai/demo-fixed-layout-animation",
-            "projectFolder": "apps/demo-fixed-layout-animation",
-            "tags": [
-                "level-1",
-                "team-flow",
-                "demo"
-            ],
-            "versionPolicyName": "appPolicy"
-        },
-        {
             "packageName": "@flowgram.ai/utils",
             "projectFolder": "packages/common/utils",
             "versionPolicyName": "publishPolicy",
@@ -535,6 +525,11 @@
                 "level-1",
                 "team-flow"
             ]
+        },
+        {
+            "packageName": "@flowgram.ai/test-run-plugin",
+            "projectFolder": "packages/plugins/test-run-plugin",
+            "versionPolicyName": "publishPolicy"
         },
         {
             "packageName": "@flowgram.ai/fixed-layout-core",
