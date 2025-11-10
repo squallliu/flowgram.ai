@@ -3,13 +3,20 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { PanelFactory, usePanelManager } from '@flowgram.ai/panel-manager-plugin';
-import { IconButton } from '@douyinfe/semi-ui';
+import { useService, WorkflowSelectService } from '@flowgram.ai/free-layout-editor';
+import { IconButton, Spin, Typography, Avatar } from '@douyinfe/semi-ui';
 import { IconUploadError, IconClose } from '@douyinfe/semi-icons';
-export const PROBLEM_PANEL = 'problem-panel';
+
+import { useProblemPanel, useNodeFormPanel } from '../../plugins/panel-manager-plugin/hooks';
+import { useWatchValidate } from './use-watch-validate';
 
 export const ProblemPanel = () => {
-  const panelManager = usePanelManager();
+  const { results, loading } = useWatchValidate();
+
+  const selectService = useService(WorkflowSelectService);
+
+  const { close: closePanel } = useProblemPanel();
+  const { open: openNodeFormPanel } = useNodeFormPanel();
 
   return (
     <div
@@ -21,34 +28,71 @@ export const ProblemPanel = () => {
         border: '1px solid rgba(82,100,154, 0.13)',
       }}
     >
-      <div style={{ display: 'flex', height: '50px', alignItems: 'center', justifyContent: 'end' }}>
+      <div
+        style={{
+          display: 'flex',
+          height: '50px',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 12px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', columnGap: '4px', height: '100%' }}>
+          <Typography.Text strong>Problem</Typography.Text>
+          {loading && <Spin size="small" style={{ lineHeight: '0' }} />}
+        </div>
         <IconButton
           type="tertiary"
           theme="borderless"
           icon={<IconClose />}
-          onClick={() => panelManager.close(PROBLEM_PANEL)}
+          onClick={() => closePanel()}
         />
       </div>
-      <div>problem panel</div>
+      <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', rowGap: '4px' }}>
+        {results.map((i) => (
+          <div
+            key={i.node.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid #999',
+              borderRadius: '4px',
+              padding: '0 4px',
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              selectService.selectNodeAndScrollToView(i.node);
+              openNodeFormPanel({ nodeId: i.node.id });
+            }}
+          >
+            <Avatar
+              style={{ flexShrink: '0' }}
+              src={i.node.getNodeRegistry().info.icon}
+              size="24px"
+              shape="square"
+            />
+            <div style={{ marginLeft: '8px' }}>
+              <Typography.Text>{i.node.form?.values.title}</Typography.Text>
+              <br />
+              <Typography.Text type="danger">
+                {i.feedbacks.map((i) => i.feedbackText).join(', ')}
+              </Typography.Text>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export const problemPanelFactory: PanelFactory<void> = {
-  key: PROBLEM_PANEL,
-  defaultSize: 200,
-  render: () => <ProblemPanel />,
-};
-
 export const ProblemButton = () => {
-  const panelManager = usePanelManager();
-
+  const { open } = useProblemPanel();
   return (
     <IconButton
       type="tertiary"
       theme="borderless"
       icon={<IconUploadError />}
-      onClick={() => panelManager.open(PROBLEM_PANEL, 'bottom')}
+      onClick={() => open()}
     />
   );
 };

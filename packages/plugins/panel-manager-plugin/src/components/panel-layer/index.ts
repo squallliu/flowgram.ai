@@ -3,4 +3,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export { PanelLayer } from './panel-layer';
+export { PanelLayer, type PanelLayerProps } from './panel-layer';

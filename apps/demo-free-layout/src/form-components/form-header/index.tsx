@@ -5,15 +5,14 @@
 
 import { useState, useEffect } from 'react';
 
-import { usePanelManager } from '@flowgram.ai/panel-manager-plugin';
 import { useClientContext, CommandService } from '@flowgram.ai/free-layout-editor';
 import { Button } from '@douyinfe/semi-ui';
 import { IconClose, IconSmallTriangleDown, IconSmallTriangleLeft } from '@douyinfe/semi-icons';
 
 import { toggleLoopExpanded } from '../../utils';
 import { FlowCommandId } from '../../shortcuts';
+import { useNodeFormPanel } from '../../plugins/panel-manager-plugin/hooks';
 import { useIsSidebar, useNodeRenderContext } from '../../hooks';
-import { nodeFormPanelFactory } from '../../components/sidebar';
 import { NodeMenu } from '../../components/node-menu';
 import { getIcon } from './utils';
 import { TitleInput } from './title-input';
@@ -24,16 +23,16 @@ export function FormHeader() {
   const [titleEdit, updateTitleEdit] = useState<boolean>(false);
   const ctx = useClientContext();
   const isSidebar = useIsSidebar();
-  const panelManager = usePanelManager();
   const handleExpand = (e: React.MouseEvent) => {
     toggleExpand();
     e.stopPropagation(); // Disable clicking prevents the sidebar from opening
   };
+  const { close: closePanel } = useNodeFormPanel();
   const handleDelete = () => {
     ctx.get<CommandService>(CommandService).executeCommand(FlowCommandId.DELETE, [node]);
   };
   const handleClose = () => {
-    panelManager.close(nodeFormPanelFactory.key);
+    closePanel();
   };
   useEffect(() => {
     // 折叠 loop 子节点

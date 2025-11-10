@@ -4,3 +4,4 @@
  */
 
 export { CustomService } from './custom-service';
+export { ValidateService } from './validate-service';

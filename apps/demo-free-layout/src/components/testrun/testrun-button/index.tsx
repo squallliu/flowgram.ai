@@ -5,25 +5,23 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-import { usePanelManager } from '@flowgram.ai/panel-manager-plugin';
 import { useClientContext, FlowNodeEntity } from '@flowgram.ai/free-layout-editor';
 import { Button, Badge } from '@douyinfe/semi-ui';
 import { IconPlay } from '@douyinfe/semi-icons';
 
-import { testRunPanelFactory } from '../testrun-panel/test-run-panel';
+import { useTestRunFormPanel } from '../../../plugins/panel-manager-plugin/hooks';
 
 import styles from './index.module.less';
 
 export function TestRunButton(props: { disabled: boolean }) {
   const [errorCount, setErrorCount] = useState(0);
   const clientContext = useClientContext();
-  const panelManager = usePanelManager();
   const updateValidateData = useCallback(() => {
     const allForms = clientContext.document.getAllNodes().map((node) => node.form);
     const count = allForms.filter((form) => form?.state.invalid).length;
     setErrorCount(count);
   }, [clientContext]);
-
+  const { open: openPanel } = useTestRunFormPanel();
   /**
    * Validate all node and Save
    */
@@ -31,7 +29,7 @@ export function TestRunButton(props: { disabled: boolean }) {
     const allForms = clientContext.document.getAllNodes().map((node) => node.form);
     await Promise.all(allForms.map(async (form) => form?.validate()));
     console.log('>>>>> save data: ', clientContext.document.toJSON());
-    panelManager.open(testRunPanelFactory.key, 'right');
+    openPanel();
   }, [clientContext]);
 
   /**

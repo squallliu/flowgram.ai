@@ -3872,6 +3872,9 @@ importers:
       '@flowgram.ai/utils':
         specifier: workspace:*
         version: link:../../common/utils
+      clsx:
+        specifier: ^1.1.1
+        version: 1.2.1
       inversify:
         specifier: ^6.0.1
         version: 6.2.2(reflect-metadata@0.2.2)

@@ -3,4 +3,4 @@
  * SPDX-License-Identifier: MIT
  */
 
-export { PROBLEM_PANEL, problemPanelFactory, ProblemButton } from './problem-panel';
+export { ProblemButton } from './problem-panel';

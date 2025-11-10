@@ -45,7 +45,8 @@ export class PanelLayer extends Layer {
 
   render(): JSX.Element {
     if (!this.layout) {
-      this.layout = createElement(PanelLayerComp);
+      const { children, ...layoutProps } = this.panelConfig.layerProps;
+      this.layout = createElement(PanelLayerComp, layoutProps, children);
     }
     return ReactDOM.createPortal(this.layout, this.panelRoot);
   }

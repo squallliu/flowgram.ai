@@ -13,7 +13,7 @@ export const createPanelManagerPlugin = definePluginCreator<Partial<PanelManager
     bind(PanelManager).to(PanelManager).inSingletonScope();
     bind(PanelManagerConfig).toConstantValue(defineConfig(opt));
   },
-  onInit(ctx, opt) {
+  onInit(ctx) {
     ctx.playground.registerLayer(PanelLayer);
     const panelManager = ctx.container.get<PanelManager>(PanelManager);
     panelManager.init();

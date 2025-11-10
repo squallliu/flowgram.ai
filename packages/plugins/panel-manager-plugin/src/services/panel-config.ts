@@ -6,13 +6,15 @@
 import { PluginContext } from '@flowgram.ai/core';
 
 import type { PanelFactory, PanelConfig } from '../types';
+import type { PanelLayerProps } from '../components/panel-layer';
 
 export interface PanelManagerConfig {
   factories: PanelFactory<any>[];
   right: PanelConfig;
   bottom: PanelConfig;
-  getPopupContainer: (ctx: PluginContext) => HTMLElement; // default playground.node.parentElement
   autoResize: boolean;
+  layerProps: PanelLayerProps;
+  getPopupContainer: (ctx: PluginContext) => HTMLElement; // default playground.node.parentElement
 }
 
 export const PanelManagerConfig = Symbol('PanelManagerConfig');
@@ -26,8 +28,9 @@ export const defineConfig = (config: Partial<PanelManagerConfig>) => {
       max: 1,
     },
     factories: [],
-    getPopupContainer: (ctx: PluginContext) => ctx.playground.node.parentNode as HTMLElement,
     autoResize: true,
+    layerProps: {},
+    getPopupContainer: (ctx: PluginContext) => ctx.playground.node.parentNode as HTMLElement,
   };
   return {
     ...defaultConfig,

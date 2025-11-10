@@ -7,7 +7,6 @@ import { FC, useState, useEffect } from 'react';
 
 import classnames from 'classnames';
 import { WorkflowInputs, WorkflowOutputs } from '@flowgram.ai/runtime-interface';
-import { type PanelFactory, usePanelManager } from '@flowgram.ai/panel-manager-plugin';
 import { useService } from '@flowgram.ai/free-layout-editor';
 import { Button, Switch } from '@douyinfe/semi-ui';
 import { IconClose, IconPlay, IconSpin } from '@douyinfe/semi-icons';
@@ -16,16 +15,16 @@ import { TestRunJsonInput } from '../testrun-json-input';
 import { TestRunForm } from '../testrun-form';
 import { NodeStatusGroup } from '../node-status-bar/group';
 import { WorkflowRuntimeService } from '../../../plugins/runtime-plugin/runtime-service';
+import { useTestRunFormPanel } from '../../../plugins/panel-manager-plugin/hooks';
 import { IconCancel } from '../../../assets/icon-cancel';
 
 import styles from './index.module.less';
 
-interface TestRunSidePanelProps {}
+export interface TestRunSidePanelProps {}
 
 export const TestRunSidePanel: FC<TestRunSidePanelProps> = () => {
   const runtimeService = useService(WorkflowRuntimeService);
-
-  const panelManager = usePanelManager();
+  const { close: closePanel } = useTestRunFormPanel();
   const [isRunning, setRunning] = useState(false);
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [errors, setErrors] = useState<string[]>();
@@ -65,7 +64,7 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = () => {
     await runtimeService.taskCancel();
     setValues({});
     setRunning(false);
-    panelManager.close(testRunPanelFactory.key);
+    closePanel();
   };
 
   const renderRunning = (
@@ -153,10 +152,4 @@ export const TestRunSidePanel: FC<TestRunSidePanelProps> = () => {
       <div className={styles['testrun-panel-footer']}>{renderButton}</div>
     </div>
   );
-};
-
-export const testRunPanelFactory: PanelFactory<TestRunSidePanelProps> = {
-  key: 'test-run-panel',
-  defaultSize: 400,
-  render: () => <TestRunSidePanel />,
 };

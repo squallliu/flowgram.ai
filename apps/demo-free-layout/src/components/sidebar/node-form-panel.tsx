@@ -5,7 +5,6 @@
 
 import { useCallback, useEffect, startTransition } from 'react';
 
-import { type PanelFactory, usePanelManager } from '@flowgram.ai/panel-manager-plugin';
 import {
   PlaygroundEntityContext,
   useRefresh,
@@ -13,6 +12,7 @@ import {
 } from '@flowgram.ai/free-layout-editor';
 
 import { FlowNodeMeta } from '../../typings';
+import { useNodeFormPanel } from '../../plugins/panel-manager-plugin/hooks';
 import { IsSidebarContext } from '../../context';
 import { SidebarNodeRenderer } from './sidebar-node-renderer';
 
@@ -21,13 +21,13 @@ export interface NodeFormPanelProps {
 }
 
 export const NodeFormPanel: React.FC<NodeFormPanelProps> = ({ nodeId }) => {
-  const panelManager = usePanelManager();
   const { selection, playground, document } = useClientContext();
   const refresh = useRefresh();
+  const { close: closePanel } = useNodeFormPanel();
   const handleClose = useCallback(() => {
     // Sidebar delayed closing
     startTransition(() => {
-      panelManager.close(nodeFormPanelFactory.key);
+      closePanel();
     });
   }, []);
   const node = document.getNode(nodeId);
@@ -65,7 +65,7 @@ export const NodeFormPanel: React.FC<NodeFormPanelProps> = ({ nodeId }) => {
   useEffect(() => {
     if (node) {
       const toDispose = node.onDispose(() => {
-        panelManager.close(nodeFormPanelFactory.key);
+        closePanel();
       });
       return () => toDispose.dispose();
     }
@@ -91,10 +91,4 @@ export const NodeFormPanel: React.FC<NodeFormPanelProps> = ({ nodeId }) => {
       </PlaygroundEntityContext.Provider>
     </IsSidebarContext.Provider>
   );
-};
-
-export const nodeFormPanelFactory: PanelFactory<NodeFormPanelProps> = {
-  key: 'node-form-panel',
-  defaultSize: 500,
-  render: (props: NodeFormPanelProps) => <NodeFormPanel {...props} />,
 };

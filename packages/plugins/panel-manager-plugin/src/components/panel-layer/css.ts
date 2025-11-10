@@ -7,22 +7,19 @@ export const globalCSS = `
   .gedit-flow-panel-layer * {
     box-sizing: border-box;
   }
+  .gedit-flow-panel-layer-wrap {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    column-gap: 4px;
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    overflow: hidden;
+  }
 `;
-
-export const panelLayer: React.CSSProperties = {
-  pointerEvents: 'none',
-  position: 'absolute',
-  top: 0,
-  left: 0,
-
-  display: 'flex',
-  columnGap: '4px',
-  width: '100%',
-  height: '100%',
-  padding: '4px',
-  boxSizing: 'border-box',
-  overflow: 'hidden',
-};
 
 export const leftArea: React.CSSProperties = {
   width: '100%',

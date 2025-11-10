@@ -7,7 +7,6 @@
 import { useMemo } from 'react';
 
 import { debounce } from 'lodash-es';
-import { createPanelManagerPlugin } from '@flowgram.ai/panel-manager-plugin';
 import { createMinimapPlugin } from '@flowgram.ai/minimap-plugin';
 import { createFreeStackPlugin } from '@flowgram.ai/free-stack-plugin';
 import { createFreeSnapPlugin } from '@flowgram.ai/free-snap-plugin';
@@ -25,20 +24,18 @@ import { createContainerNodePlugin } from '@flowgram.ai/free-container-plugin';
 import { canContainNode, onDragLineEnd } from '../utils';
 import { FlowNodeRegistry, FlowDocumentJSON } from '../typings';
 import { shortcuts } from '../shortcuts';
-import { CustomService } from '../services';
+import { CustomService, ValidateService } from '../services';
 import { GetGlobalVariableSchema } from '../plugins/variable-panel-plugin';
 import { WorkflowRuntimeService } from '../plugins/runtime-plugin/runtime-service';
 import {
   createRuntimePlugin,
   createContextMenuPlugin,
   createVariablePanelPlugin,
+  createPanelManagerPlugin,
 } from '../plugins';
 import { defaultFormMeta } from '../nodes/default-form-meta';
 import { WorkflowNodeType } from '../nodes';
-import { testRunPanelFactory } from '../components/testrun/testrun-panel';
-import { nodeFormPanelFactory } from '../components/sidebar';
 import { SelectorBoxPopover } from '../components/selector-box-popover';
-import { problemPanelFactory } from '../components/problem-panel';
 import { BaseNode, CommentRender, GroupNodeRender, LineAddButton, NodePanel } from '../components';
 
 export function useEditorProps(
@@ -247,6 +244,7 @@ export function useEditorProps(
        */
       onBind: ({ bind }) => {
         bind(CustomService).toSelf().inSingletonScope();
+        bind(ValidateService).toSelf().inSingletonScope();
       },
       /**
        * Playground init
@@ -385,9 +383,7 @@ export function useEditorProps(
           initialData: initialData.globalVariable,
         }),
         /** Float layout plugin */
-        createPanelManagerPlugin({
-          factories: [nodeFormPanelFactory, testRunPanelFactory, problemPanelFactory],
-        }),
+        createPanelManagerPlugin(),
       ],
     }),
     []

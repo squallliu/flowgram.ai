@@ -7,7 +7,7 @@
 export { createPanelManagerPlugin } from './create-panel-manager-plugin';
 
 /** services */
-export { PanelManager } from './services';
+export { PanelManager, type PanelManagerConfig } from './services';
 
 /** react hooks */
 export { usePanelManager } from './hooks/use-panel-manager';
