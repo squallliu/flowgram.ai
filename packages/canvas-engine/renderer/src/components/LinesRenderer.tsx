@@ -32,6 +32,7 @@ export function createLines(props: PropsType): void {
   const { data, rendererRegistry, linesSave, dragService } = props;
   const { lines, entity } = data || {};
 
+  const radius = getDefaultSpacing(entity, DefaultSpacingKey.ROUNDED_LINE_RADIUS);
   const xRadius = getDefaultSpacing(entity, DefaultSpacingKey.ROUNDED_LINE_X_RADIUS);
   const yRadius = getDefaultSpacing(entity, DefaultSpacingKey.ROUNDED_LINE_Y_RADIUS);
 
@@ -71,6 +72,7 @@ export function createLines(props: PropsType): void {
             lineId={data.entity.id}
             isHorizontal={!isVertical}
             activated={lineActivated || draggingLineActivated}
+            radius={radius}
             {...line}
             xRadius={xRadius}
             yRadius={yRadius}

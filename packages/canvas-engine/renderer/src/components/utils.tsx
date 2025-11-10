@@ -25,7 +25,7 @@ export const DEFAULT_LINE_ATTRS: React.SVGProps<SVGPathElement> = {
 };
 
 // 默认的圆角半径
-export const DEFAULT_RADIUS = 16;
+export const DEFAULT_RADIUS = DEFAULT_SPACING[DefaultSpacingKey.ROUNDED_LINE_RADIUS];
 
 // 小圆角
 export const MINI_RADIUS = 10;

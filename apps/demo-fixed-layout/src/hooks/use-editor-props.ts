@@ -114,6 +114,7 @@ export function useEditorProps(
         // [ConstantKeys.BRANCH_SPACING]: 20,
         // [ConstantKeys.INLINE_SPACING_BOTTOM]: 24,
         // [ConstantKeys.INLINE_BLOCKS_INLINE_SPACING_BOTTOM]: 13,
+        // [ConstantKeys.ROUNDED_LINE_RADIUS]: 32,
         // [ConstantKeys.ROUNDED_LINE_X_RADIUS]: 8,
         // [ConstantKeys.ROUNDED_LINE_Y_RADIUS]: 10,
         // [ConstantKeys.INLINE_BLOCKS_INLINE_SPACING_TOP]: 23,

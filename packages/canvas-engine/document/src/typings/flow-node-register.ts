@@ -66,6 +66,10 @@ export const DefaultSpacingKey = {
    */
   BRANCH_SPACING: 'BRANCH_SPACING',
   /**
+   * 圆弧线条拐角 radius
+   */
+  ROUNDED_LINE_RADIUS: 'ROUNDED_LINE_RADIUS',
+  /**
    * 圆弧线条 x radius
    */
   ROUNDED_LINE_X_RADIUS: 'ROUNDED_LINE_X_RADIUS',
@@ -106,6 +110,7 @@ export const DEFAULT_SPACING = {
   MIN_INLINE_BLOCK_SPACING: 200, // 分支间最小边距 (垂直布局)
   MIN_INLINE_BLOCK_SPACING_HORIZONTAL: 80, // 分支间最小边距 (水平布局)
   [DefaultSpacingKey.COLLAPSED_SPACING]: 12, // 复合节点距离上个节点的距离
+  [DefaultSpacingKey.ROUNDED_LINE_RADIUS]: 16, // 圆弧线条拐角 radius
   [DefaultSpacingKey.ROUNDED_LINE_X_RADIUS]: 16, // 圆弧线条 x radius
   [DefaultSpacingKey.ROUNDED_LINE_Y_RADIUS]: 20, // 圆弧线条 y radius
   [DefaultSpacingKey.HOVER_AREA_WIDTH]: 20, // width of hover area
