@@ -6,3 +6,4 @@
 export { PanelManager } from './panel-manager';
 export { PanelManagerConfig } from './panel-config';
 export { PanelLayer } from './panel-layer';
+export { PanelRestore, PanelRestoreImpl } from './panel-restore';

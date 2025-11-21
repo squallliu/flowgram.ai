@@ -4,74 +4,114 @@
  */
 
 import { injectable, inject } from 'inversify';
-import { Playground } from '@flowgram.ai/core';
+import { Emitter } from '@flowgram.ai/utils';
 
 import { PanelManagerConfig } from './panel-config';
-import type { Area, PanelFactory } from '../types';
-import { FloatPanel } from './float-panel';
+import type { Area, PanelEntityConfig, PanelFactory } from '../types';
+import { PanelEntity, PanelEntityFactory } from './panel-factory';
 
 @injectable()
 export class PanelManager {
-  @inject(Playground) readonly playground: Playground;
-
   @inject(PanelManagerConfig) readonly config: PanelManagerConfig;
+
+  @inject(PanelEntityFactory) readonly createPanel: PanelEntityFactory;
 
   readonly panelRegistry = new Map<string, PanelFactory<any>>();
 
-  right: FloatPanel;
+  private panels = new Map<string, PanelEntity>();
 
-  bottom: FloatPanel;
+  private onPanelsChangeEvent = new Emitter<void>();
 
-  dockedRight: FloatPanel;
-
-  dockedBottom: FloatPanel;
+  public onPanelsChange = this.onPanelsChangeEvent.event;
 
   init() {
     this.config.factories.forEach((factory) => this.register(factory));
-    this.right = new FloatPanel(this.config.right);
-    this.bottom = new FloatPanel(this.config.bottom);
-    this.dockedRight = new FloatPanel(this.config.dockedRight);
-    this.dockedBottom = new FloatPanel(this.config.dockedBottom);
   }
 
+  /** registry panel factory */
   register<T extends any>(factory: PanelFactory<T>) {
     this.panelRegistry.set(factory.key, factory);
   }
 
-  open(key: string, area: Area = 'right', options?: any) {
+  /** open panel */
+  public open(key: string, area: Area = 'right', options?: PanelEntityConfig) {
     const factory = this.panelRegistry.get(key);
     if (!factory) {
       return;
     }
-    const panel = this.getPanel(area);
-    panel.open(factory, options);
+
+    const sameKeyPanels = this.getPanels(area).filter((p) => p.key === key);
+    if (!factory.allowDuplicates && sameKeyPanels.length) {
+      sameKeyPanels.forEach((p) => this.remove(p.id));
+    }
+
+    const panel = this.createPanel({
+      factory,
+      config: {
+        area,
+        ...options,
+      },
+    });
+
+    this.panels.set(panel.id, panel);
+    this.trim(area);
+    this.onPanelsChangeEvent.fire();
+    console.log('jxj', this.panels);
   }
 
-  close(key?: string) {
-    this.right.close(key);
-    this.bottom.close(key);
-    this.dockedRight.close(key);
-    this.dockedBottom.close(key);
+  /** close panel */
+  public close(key?: string) {
+    const panels = this.getPanels();
+    const closedPanels = key ? panels.filter((p) => p.key === key) : panels;
+    closedPanels.forEach((p) => this.remove(p.id));
+    this.onPanelsChangeEvent.fire();
   }
 
-  getPanel(area: Area) {
+  private trim(area: Area) {
+    const panels = this.getPanels(area);
+    const areaConfig = this.getAreaConfig(area);
+    console.log('jxj', areaConfig.max, panels.length);
+    while (panels.length > areaConfig.max) {
+      const removed = panels.shift();
+      if (removed) {
+        this.remove(removed.id);
+      }
+    }
+  }
+
+  private remove(id: string) {
+    const panel = this.panels.get(id);
+    if (panel) {
+      panel.dispose();
+      this.panels.delete(id);
+    }
+  }
+
+  getPanels(area?: Area) {
+    const panels: PanelEntity[] = [];
+    this.panels.forEach((panel) => {
+      if (!area || panel.area === area) {
+        panels.push(panel);
+      }
+    });
+    return panels;
+  }
+
+  getAreaConfig(area: Area) {
     switch (area) {
       case 'docked-bottom':
-        return this.dockedBottom;
+        return this.config.dockedBottom;
       case 'docked-right':
-        return this.dockedRight;
+        return this.config.dockedRight;
       case 'bottom':
-        return this.bottom;
+        return this.config.bottom;
       case 'right':
       default:
-        return this.right;
+        return this.config.right;
     }
   }
 
   dispose() {
-    this.right.dispose();
-    this.bottom.dispose();
-    this.dockedBottom.dispose();
-    this.dockedRight.dispose();
+    this.onPanelsChangeEvent.dispose();
   }
 }

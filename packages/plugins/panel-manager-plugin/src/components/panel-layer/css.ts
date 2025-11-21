@@ -43,8 +43,9 @@ export const globalCSS = `
     min-width: 0;
     display: flex;
     column-gap: 4px;
+    max-width: 100%;
   }
-  
+
   .gedit-flow-panel-main-area {
     position: relative;
     overflow: hidden;
@@ -59,11 +60,15 @@ export const globalCSS = `
     width: 100%;
     min-height: 0;
   }
+  .gedit-flow-panel-wrap {
+    pointer-events: auto;
+    overflow: auto;
+    position: relative;
+  }
+  .gedit-flow-panel-wrap.panel-horizontal {
+    height: 100%;
+  }
+  .gedit-flow-panel-wrap.panel-vertical {
+    width: 100%;
+  }
 `;
-
-export const floatPanelWrap: React.CSSProperties = {
-  pointerEvents: 'auto',
-  height: '100%',
-  width: '100%',
-  overflow: 'auto',
-};

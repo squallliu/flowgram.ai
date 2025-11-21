@@ -13,6 +13,17 @@ export interface PanelConfig {
 export interface PanelFactory<T extends any> {
   key: string;
   defaultSize: number;
+  maxSize?: number;
+  minSize?: number;
   style?: React.CSSProperties;
+  /** Allows multiple panels with the same key to be rendered simultaneously  */
+  allowDuplicates?: boolean;
+  resize?: boolean;
   render: (props: T) => React.ReactNode;
+}
+
+export interface PanelEntityConfig<T extends any = any> {
+  defaultSize?: number;
+  style?: React.CSSProperties;
+  props?: T;
 }

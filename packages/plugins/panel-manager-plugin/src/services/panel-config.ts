@@ -15,6 +15,7 @@ export interface PanelManagerConfig {
   bottom: PanelConfig;
   dockedRight: PanelConfig;
   dockedBottom: PanelConfig;
+  /** Resizable, and multi-panel options mutually exclusive */
   autoResize: boolean;
   layerProps: PanelLayerProps;
   resizeBarRender: ({

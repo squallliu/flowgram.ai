@@ -19,7 +19,7 @@ test.describe('test llm drawer', () => {
   test('sync data', async ({ page }) => {
     // 确保 llm drawer 更改表单数据，数据同步
     const LLM_NODE_ID = 'llm_0';
-    const DRAWER_CLASSNAME = 'float-panel-wrap';
+    const DRAWER_CLASSNAME = 'gedit-flow-panel-wrap';
 
     const TEST_FILL_VALUE = '123';
 

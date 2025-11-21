@@ -6,7 +6,7 @@
 import clsx from 'clsx';
 
 import { useGlobalCSS } from '../../hooks/use-global-css';
-import { FloatPanel } from './float-panel';
+import { PanelArea } from './panel';
 import { globalCSS } from './css';
 
 export type PanelLayerProps = React.PropsWithChildren<{
@@ -40,11 +40,11 @@ export const PanelLayer: React.FC<PanelLayerProps> = ({
       <div className="gedit-flow-panel-left-area">
         <div className="gedit-flow-panel-main-area">{children}</div>
         <div className="gedit-flow-panel-bottom-area">
-          <FloatPanel area={mode === 'docked' ? 'docked-bottom' : 'bottom'} />
+          <PanelArea area={mode === 'docked' ? 'docked-bottom' : 'bottom'} />
         </div>
       </div>
       <div className="gedit-flow-panel-right-area">
-        <FloatPanel area={mode === 'docked' ? 'docked-right' : 'right'} />
+        <PanelArea area={mode === 'docked' ? 'docked-right' : 'right'} />
       </div>
     </div>
   );
