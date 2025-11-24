@@ -31,7 +31,7 @@ export class ShortcutsRegistry {
 
   @inject(CommandRegistry) protected commandRegistry: CommandRegistry;
 
-  readonly shortcutsHandlers: ShortcutsHandler[] = [];
+  shortcutsHandlers: ShortcutsHandler[] = [];
 
   addHandlers(...handlers: ShortcutsHandler[]): void {
     // 注册 command
@@ -58,6 +58,12 @@ export class ShortcutsRegistry {
         this.addHandlers(handler);
       }
     });
+  }
+
+  removeHandler(commandId: string): void {
+    this.shortcutsHandlers = this.shortcutsHandlers.filter(
+      (handler) => handler.commandId !== commandId
+    );
   }
 
   has(commandId: string): boolean {

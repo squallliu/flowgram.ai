@@ -84,7 +84,9 @@ export class FlowSelectorBoundsLayer extends Layer<FlowSelectorBoundsLayerOption
       this.selectBoundsBackground.classList.add(this.options.backgroundClassName);
     }
     // 这里创建一个空 layer 用于放背景
-    const selectorBoundsLayer = domUtils.createDivWithClass('gedit-playground-layer');
+    const selectorBoundsLayer = domUtils.createDivWithClass(
+      'gedit-selector-bounds-background-layer gedit-playground-layer'
+    );
     selectorBoundsLayer.appendChild(this.selectBoundsBackground);
     // 背景框需要在节点的下边
     this.pipelineNode.insertBefore(selectorBoundsLayer, firstChild);
