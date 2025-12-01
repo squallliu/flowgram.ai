@@ -16,7 +16,7 @@ export interface TestRunPipelineEntityOptions {
 }
 
 interface TestRunPipelineEntityState<T = any> {
-  status: 'idle' | 'preparing' | 'executing' | 'canceled' | 'finished';
+  status: 'idle' | 'preparing' | 'executing' | 'canceled' | 'finished' | 'disposed';
   data?: T;
   result?: any;
   getData: () => T;
@@ -42,6 +42,8 @@ export class TestRunPipelineEntity extends StoreService<TestRunPipelineEntitySta
   container: interfaces.Container | undefined;
 
   id = nanoid();
+
+  plugins: TestRunPipelinePlugin[] = [];
 
   prepare = new Tap<TestRunPipelineEntityCtx>();
 
@@ -81,6 +83,7 @@ export class TestRunPipelineEntity extends StoreService<TestRunPipelineEntitySta
     for (const PluginClass of plugins) {
       const plugin = this.container.resolve<TestRunPipelinePlugin>(PluginClass);
       plugin.apply(this);
+      this.plugins.push(plugin);
     }
   }
 
@@ -139,5 +142,14 @@ export class TestRunPipelineEntity extends StoreService<TestRunPipelineEntitySta
     this.status = 'canceled';
   }
 
-  dispose() {}
+  dispose() {
+    this.status = 'disposed';
+    this.plugins.forEach((p) => {
+      if (p.dispose) {
+        p.dispose();
+      }
+    });
+    this.onProgressEmitter.dispose();
+    this.onFinishedEmitter.dispose();
+  }
 }

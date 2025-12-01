@@ -13,6 +13,7 @@ export interface PanelConfig {
 export interface PanelFactory<T extends any> {
   key: string;
   defaultSize: number;
+  fullscreen?: boolean;
   maxSize?: number;
   minSize?: number;
   style?: React.CSSProperties;
@@ -24,6 +25,7 @@ export interface PanelFactory<T extends any> {
 
 export interface PanelEntityConfig<T extends any = any> {
   defaultSize?: number;
+  fullscreen?: boolean;
   style?: React.CSSProperties;
   props?: T;
 }

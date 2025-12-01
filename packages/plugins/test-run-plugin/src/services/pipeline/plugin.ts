@@ -8,4 +8,6 @@ import type { TestRunPipelineEntity } from './pipeline';
 export interface TestRunPipelinePlugin {
   name: string;
   apply(pipeline: TestRunPipelineEntity): void;
+
+  dispose?: () => void;
 }

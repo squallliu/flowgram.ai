@@ -56,7 +56,6 @@ export class PanelManager {
     this.panels.set(panel.id, panel);
     this.trim(area);
     this.onPanelsChangeEvent.fire();
-    console.log('jxj', this.panels);
   }
 
   /** close panel */
@@ -70,7 +69,6 @@ export class PanelManager {
   private trim(area: Area) {
     const panels = this.getPanels(area);
     const areaConfig = this.getAreaConfig(area);
-    console.log('jxj', areaConfig.max, panels.length);
     while (panels.length > areaConfig.max) {
       const removed = panels.shift();
       if (removed) {

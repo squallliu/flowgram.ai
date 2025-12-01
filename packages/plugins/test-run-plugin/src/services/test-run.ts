@@ -73,6 +73,14 @@ export class TestRunService {
     return pipeline;
   }
 
+  disposePipeline(id: string) {
+    const pipeline = this.pipelineEntities.get(id);
+    if (pipeline) {
+      this.pipelineEntities.delete(id);
+      pipeline.dispose();
+    }
+  }
+
   connectPipeline(pipeline: TestRunPipelineEntity) {
     if (this.pipelineBindings.get(pipeline.id)) {
       return;

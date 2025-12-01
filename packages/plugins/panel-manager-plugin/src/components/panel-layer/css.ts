@@ -20,8 +20,6 @@ export const globalCSS = `
 
   }
   .gedit-flow-panel-layer-wrap-floating {
-    column-gap: 4px;
-    padding: 4px;
     pointer-events: none;
   }
 
@@ -33,16 +31,12 @@ export const globalCSS = `
     display: flex;
     flex-direction: column;
   }
-  .gedit-flow-panel-layer-wrap-floating .gedit-flow-panel-left-area {
-    row-gap: 4px;
-  }
   .gedit-flow-panel-right-area {
     height: 100%;
     flex-grow: 1;
     flex-shrink: 0;
     min-width: 0;
     display: flex;
-    column-gap: 4px;
     max-width: 100%;
   }
 
