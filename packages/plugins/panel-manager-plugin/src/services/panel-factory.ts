@@ -30,6 +30,7 @@ const PANEL_SIZE_DEFAULT = 400;
 export interface PanelEntityState {
   size: number;
   fullscreen: boolean;
+  visible: boolean;
 }
 
 @injectable()
@@ -85,6 +86,18 @@ export class PanelEntity {
       return false;
     }
     return this.factory.resize !== undefined ? this.factory.resize : this.globalConfig.autoResize;
+  }
+
+  get keepDOM() {
+    return this.factory.keepDOM;
+  }
+
+  get visible() {
+    return this.store.getState().visible;
+  }
+
+  set visible(next: boolean) {
+    this.store.setState({ visible: next });
   }
 
   get layer() {

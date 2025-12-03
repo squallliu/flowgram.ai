@@ -20,6 +20,7 @@ export interface PanelFactory<T extends any> {
   /** Allows multiple panels with the same key to be rendered simultaneously  */
   allowDuplicates?: boolean;
   resize?: boolean;
+  keepDOM?: boolean;
   render: (props: T) => React.ReactNode;
 }
 

@@ -42,7 +42,12 @@ export class PanelManager {
 
     const sameKeyPanels = this.getPanels(area).filter((p) => p.key === key);
     if (!factory.allowDuplicates && sameKeyPanels.length) {
-      sameKeyPanels.forEach((p) => this.remove(p.id));
+      !factory.keepDOM && sameKeyPanels.forEach((p) => this.remove(p.id));
+    }
+
+    if (factory.keepDOM && sameKeyPanels.length) {
+      sameKeyPanels[0].visible = true;
+      return;
     }
 
     const panel = this.createPanel({
@@ -52,6 +57,9 @@ export class PanelManager {
         ...options,
       },
     });
+    if (factory.keepDOM) {
+      panel.visible = true;
+    }
 
     this.panels.set(panel.id, panel);
     this.trim(area);
@@ -62,12 +70,20 @@ export class PanelManager {
   public close(key?: string) {
     const panels = this.getPanels();
     const closedPanels = key ? panels.filter((p) => p.key === key) : panels;
-    closedPanels.forEach((p) => this.remove(p.id));
+    closedPanels.forEach((panel) => {
+      if (panel.keepDOM) {
+        panel.visible = false;
+        panel.dispose();
+        return;
+      }
+
+      this.remove(panel.id)
+    });
     this.onPanelsChangeEvent.fire();
   }
 
   private trim(area: Area) {
-    const panels = this.getPanels(area);
+    const panels = this.getPanels(area).filter((p) => !p.keepDOM);
     const areaConfig = this.getAreaConfig(area);
     while (panels.length > areaConfig.max) {
       const removed = panels.shift();

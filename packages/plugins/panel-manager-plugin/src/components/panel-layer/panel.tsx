@@ -19,9 +19,10 @@ const PanelItem: React.FC<{ panel: PanelEntity }> = ({ panel }) => {
 
   const isHorizontal = ['right', 'docked-right'].includes(panel.area);
 
-  const { size, fullscreen } = usePanelStore((s) => ({ size: s.size, fullscreen: s.fullscreen }));
+  const { size, fullscreen, visible } = usePanelStore((s) => ({ size: s.size, fullscreen: s.fullscreen, visible: s.visible }));
 
   const [layerSize, setLayerSize] = useState(size);
+  const [displayStyle, setDisplayStyle] = useState({});
 
   const currentSize = fullscreen ? layerSize : size;
 
@@ -61,6 +62,12 @@ const PanelItem: React.FC<{ panel: PanelEntity }> = ({ panel }) => {
     return () => observer.disconnect();
   }, [fullscreen]);
 
+  useEffect(() => {
+    if (panel.keepDOM) {
+      setDisplayStyle({ display: visible ? 'block' : 'none' });
+    }
+  }, [visible]);
+
   return (
     <div
       className={clsx(
@@ -69,7 +76,7 @@ const PanelItem: React.FC<{ panel: PanelEntity }> = ({ panel }) => {
       )}
       key={panel.id}
       ref={ref}
-      style={{ ...panel.factory.style, ...panel.config.style, ...sizeStyle }}
+      style={{ ...displayStyle, ...panel.factory.style, ...panel.config.style, ...sizeStyle }}
     >
       {panel.resizable &&
         panelManager.config.resizeBarRender({
