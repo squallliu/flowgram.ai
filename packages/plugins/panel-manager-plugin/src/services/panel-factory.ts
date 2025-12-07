@@ -122,6 +122,7 @@ export class PanelEntity {
       {
         size: this.factory.defaultSize || PANEL_SIZE_DEFAULT,
         fullscreen: this.factory.fullscreen || false,
+        ...(this.factory.keepDOM ? { visible: true } : {}),
       }
     );
 

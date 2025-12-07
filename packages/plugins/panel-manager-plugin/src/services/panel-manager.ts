@@ -57,9 +57,6 @@ export class PanelManager {
         ...options,
       },
     });
-    if (factory.keepDOM) {
-      panel.visible = true;
-    }
 
     this.panels.set(panel.id, panel);
     this.trim(area);
@@ -73,7 +70,6 @@ export class PanelManager {
     closedPanels.forEach((panel) => {
       if (panel.keepDOM) {
         panel.visible = false;
-        panel.dispose();
         return;
       }
 
