@@ -213,7 +213,7 @@ export class WorkflowSnapLayer extends Layer<WorkflowSnapLayerOptions> {
       edgeLines.push({
         className: 'edge-full-top-right',
         sourceNode: topFullAlign.sourceNodeId,
-        left: snapRect.right,
+        left: snapRect.right - 1,
         ...lineData,
       });
       edgeLines.push({
@@ -244,7 +244,7 @@ export class WorkflowSnapLayer extends Layer<WorkflowSnapLayerOptions> {
       edgeLines.push({
         className: 'edge-full-bottom-right',
         sourceNode: bottomFullAlign.sourceNodeId,
-        left: snapRect.right,
+        left: snapRect.right - 1,
         ...lineData,
       });
       edgeLines.push({
@@ -277,7 +277,7 @@ export class WorkflowSnapLayer extends Layer<WorkflowSnapLayerOptions> {
       edgeLines.push({
         className: 'edge-full-left-bottom',
         sourceNode: leftFullAlign.sourceNodeId,
-        top: snapRect.bottom,
+        top: snapRect.bottom - 1,
         ...lineData,
       });
       edgeLines.push({
@@ -308,7 +308,7 @@ export class WorkflowSnapLayer extends Layer<WorkflowSnapLayerOptions> {
       edgeLines.push({
         className: 'edge-full-right-bottom',
         sourceNode: rightFullAlign.sourceNodeId,
-        top: snapRect.bottom,
+        top: snapRect.bottom - 1,
         ...lineData,
       });
       edgeLines.push({
@@ -335,7 +335,7 @@ export class WorkflowSnapLayer extends Layer<WorkflowSnapLayerOptions> {
           const top = Math.min(nodeRect.top, snapRect.top);
           const bottom = Math.max(nodeRect.bottom, snapRect.bottom);
           const height = bottom - top;
-          const left = snapLine.x;
+          const left = direction === 'right' ? snapLine.x - 1 : snapLine.x;
           const width = this.options.edgeLineWidth;
           const isMidX = direction === 'midVertical';
           const lineData: SnapRenderLine = {
@@ -360,7 +360,7 @@ export class WorkflowSnapLayer extends Layer<WorkflowSnapLayerOptions> {
           const left = Math.min(nodeRect.left, snapRect.left);
           const right = Math.max(nodeRect.right, snapRect.right);
           const width = right - left;
-          const top = snapLine.y;
+          const top = direction === 'bottom' ? snapLine.y - 1 : snapLine.y;
           const height = this.options.edgeLineWidth;
           const isMidY = direction === 'midHorizontal';
           const lineData: SnapRenderLine = {
