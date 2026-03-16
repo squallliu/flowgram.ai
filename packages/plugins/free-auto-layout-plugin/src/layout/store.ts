@@ -93,7 +93,7 @@ export class LayoutStore implements ILayoutStore {
           .filter((edge) => blockIdSet.has(edge.to?.id ?? ''))
           .map((edge) => {
             const { from, to } = edge.info;
-            if (!from || !to || edge.vertical) {
+            if (!from || !to) {
               return;
             }
             const id = `virtual_${groupId}_from_${from}_to_${to}`;
@@ -113,7 +113,7 @@ export class LayoutStore implements ILayoutStore {
           .filter((edge) => blockIdSet.has(edge.from?.id ?? ''))
           .map((edge) => {
             const { from, to } = edge.info;
-            if (!from || !to || edge.vertical) {
+            if (!from || !to) {
               return;
             }
             const id = `virtual_${groupId}_from_${from}_to_${to}`;
