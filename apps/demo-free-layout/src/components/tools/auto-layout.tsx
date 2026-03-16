@@ -14,6 +14,10 @@ export const AutoLayout = () => {
   const tools = usePlaygroundTools();
   const playground = usePlayground();
   const autoLayout = useCallback(async () => {
+    if (playground.config.readonly) {
+      console.warn('Auto layout is disabled in readonly mode');
+      return;
+    }
     await tools.autoLayout({
       enableAnimation: true,
       animationDuration: 1000,

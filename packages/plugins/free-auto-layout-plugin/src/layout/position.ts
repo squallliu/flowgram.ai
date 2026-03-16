@@ -46,13 +46,17 @@ export class LayoutPosition {
   private updateNodePosition(params: { layoutNode: LayoutNode; step: number }): void {
     const { layoutNode, step } = params;
     const { transform } = layoutNode.entity.transform;
+
+    // layoutNode.position.y is the center point, but the canvas node origin is at the top edge.
+    // Subtract half the inner height to convert center-y to top-edge-y.
+    // When alignTopEdge is true, skip the offset so all nodes' top edges share the same horizontal line.
+    const centerToTopEdgeOffset = this.store.options.alignTopEdge
+      ? 0
+      : (layoutNode.size.height - layoutNode.padding.top - layoutNode.padding.bottom) / 2;
+
     const layoutPosition: PositionSchema = {
       x: layoutNode.position.x + layoutNode.offset.x,
-      // layoutNode.position.y 是中心点，但画布节点原点在上边沿的中间，所以 y 坐标需要转化后一下
-      y:
-        layoutNode.position.y +
-        layoutNode.offset.y -
-        (layoutNode.size.height - layoutNode.padding.top - layoutNode.padding.bottom) / 2,
+      y: layoutNode.position.y + layoutNode.offset.y - centerToTopEdgeOffset,
     };
 
     const deltaX = ((layoutPosition.x - transform.position.x) * step) / 100;

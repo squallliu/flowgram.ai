@@ -9,7 +9,7 @@ import { HistoryService } from '@flowgram.ai/history';
 import { WorkflowDocument, WorkflowNodeEntity } from '@flowgram.ai/free-layout-core';
 import { FreeOperationType } from '@flowgram.ai/free-history-plugin';
 import { AutoLayoutService, LayoutOptions } from '@flowgram.ai/free-auto-layout-plugin';
-import { Playground, TransformData } from '@flowgram.ai/editor';
+import { TransformData } from '@flowgram.ai/editor';
 
 export type AutoLayoutResetFn = () => void;
 
@@ -23,17 +23,11 @@ export type AutoLayoutToolOptions = LayoutOptions;
 export class WorkflowAutoLayoutTool {
   @inject(WorkflowDocument) private document: WorkflowDocument;
 
-  @inject(Playground)
-  private playground: Playground;
-
   @inject(AutoLayoutService) private autoLayoutService: AutoLayoutService;
 
   @inject(HistoryService) @optional() private historyService: HistoryService;
 
   public async handle(options: AutoLayoutToolOptions = {}): Promise<AutoLayoutResetFn> {
-    if (this.playground.config.readonly) {
-      return () => {};
-    }
     const resetFn = await this.autoLayout(options);
     return resetFn;
   }

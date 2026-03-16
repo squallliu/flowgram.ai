@@ -102,13 +102,26 @@ export interface LayoutParams {
 }
 
 export interface LayoutOptions {
+  /** Custom layout configuration to override default dagre settings. */
   layoutConfig?: Partial<LayoutConfig>;
+  /** The container node entity used as the root for the layout. */
   containerNode?: WorkflowNodeEntity;
+  /** Custom function to determine follow-node relationships between layout nodes. */
   getFollowNode?: GetFollowNode;
+  /** Whether to animate node movements during layout positioning. */
   enableAnimation?: boolean;
+  /** Duration of the position animation in milliseconds. Only effective when `enableAnimation` is true. */
   animationDuration?: number;
+  /** When true, skips the fit-view step after layout is applied. */
   disableFitView?: boolean;
+  /**
+   * When true, aligns nodes by their top edge instead of their center point.
+   * Defaults to false (center-aligned). Set to true to place all nodes' top edges on the same horizontal line.
+   */
+  alignTopEdge?: boolean;
+  /** Filter function to exclude specific nodes from the layout. Return false to skip a node. */
   filterNode?: (params: { node: WorkflowNodeEntity; parent?: WorkflowNodeEntity }) => boolean;
+  /** Filter function to exclude specific edges from the layout. Return false to skip an edge. */
   filterLine?: (params: { line: WorkflowLineEntity }) => boolean;
 }
 
