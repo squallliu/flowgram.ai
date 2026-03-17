@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
+import { createPanelManagerPlugin, usePanelManager } from '@flowgram.ai/panel-manager-plugin';
 import { createMinimapPlugin } from '@flowgram.ai/minimap-plugin';
 import { createFreeSnapPlugin } from '@flowgram.ai/free-snap-plugin';
 import {
@@ -17,6 +18,7 @@ import {
 
 import { nodeRegistries } from '../node-registries';
 import { initialData } from '../initial-data';
+import { nodeFormPanelFactory } from '../components/node-form-panel';
 
 export const useEditorProps = () =>
   useMemo<FreeLayoutProps>(
@@ -74,10 +76,20 @@ export const useEditorProps = () =>
          */
         renderDefaultNode: (props: WorkflowNodeProps) => {
           const { form } = useNodeRender();
+          const panelManager = usePanelManager();
           return (
-            <WorkflowNodeRenderer className="demo-free-node" node={props.node}>
-              {form?.render()}
-            </WorkflowNodeRenderer>
+            <div
+              onClick={() =>
+                panelManager.open(nodeFormPanelFactory.key, 'right', {
+                  props: { nodeId: props.node.id },
+                })
+              }
+            >
+              {/* @ts-ignore */}
+              <WorkflowNodeRenderer className="demo-free-node" node={props.node}>
+                {form?.render()}
+              </WorkflowNodeRenderer>
+            </div>
           );
         },
       },
@@ -152,6 +164,13 @@ export const useEditorProps = () =>
           edgeLineWidth: 1,
           alignLineWidth: 1,
           alignCrossWidth: 8,
+        }),
+        /**
+         * Panel manager plugin
+         * 面板管理插件
+         */
+        createPanelManagerPlugin({
+          factories: [nodeFormPanelFactory],
         }),
       ],
     }),

@@ -33,6 +33,7 @@
     "@flowgram.ai/free-layout-editor": "workspace:*",
     "@flowgram.ai/free-snap-plugin": "workspace:*",
     "@flowgram.ai/minimap-plugin": "workspace:*",
+    "@flowgram.ai/panel-manager-plugin": "workspace:*",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },

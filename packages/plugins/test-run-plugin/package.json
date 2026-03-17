@@ -25,7 +25,7 @@
   "dependencies": {
     "inversify": "^6.0.1",
     "nanoid": "^5.0.9",
-    "zustand": "^5.0.8",
+    "zustand": "^4.5.5",
     "@flowgram.ai/form-core": "workspace:*",
     "@flowgram.ai/core": "workspace:*",
     "@flowgram.ai/utils": "workspace:*",

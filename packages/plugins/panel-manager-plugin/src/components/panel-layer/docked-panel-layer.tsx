@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+import * as React from 'react';
+
 import { PanelLayer, PanelLayerProps } from './panel-layer';
 
 export type DockedPanelLayerProps = Omit<PanelLayerProps, 'mode'>;

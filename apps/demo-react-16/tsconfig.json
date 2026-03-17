@@ -16,8 +16,8 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "types": ["node"],
-    "jsx": "react-jsx",
+    "jsx": "react",
     "lib": ["es6", "dom", "es2020", "es2019.Array"]
   },
-  "include": ["./src"],
+  "include": ["./src"]
 }

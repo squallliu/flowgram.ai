@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import React, { useRef, useState } from 'react';
+import * as React from 'react';
+
+const { useRef, useState } = React;
 
 interface Props {
   size: number;

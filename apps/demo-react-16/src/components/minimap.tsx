@@ -2,6 +2,7 @@
  * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
  * SPDX-License-Identifier: MIT
  */
+import React from 'react';
 
 import { MinimapRender } from '@flowgram.ai/minimap-plugin';
 
@@ -15,6 +16,7 @@ export const Minimap = () => (
       width: 198,
     }}
   >
+    {/* @ts-ignore */}
     <MinimapRender
       containerStyles={{
         pointerEvents: 'auto',

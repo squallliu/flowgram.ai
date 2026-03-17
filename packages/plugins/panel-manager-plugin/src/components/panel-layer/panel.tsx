@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: MIT
  */
 
-import { useEffect, startTransition, useState, useRef } from 'react';
+import * as React from 'react';
+
+const { useEffect, useState, useRef } = React;
 
 import { clsx } from 'clsx';
 
@@ -95,10 +97,21 @@ export const PanelArea: React.FC<{ area: Area }> = ({ area }) => {
   const [panels, setPanels] = useState(panelManager.getPanels(area));
 
   useEffect(() => {
+    let pending: number;
+
+    function startTransition(fn: () => void) {
+      clearTimeout(pending);
+      pending = setTimeout(fn, 0);
+    }
     const dispose = panelManager.onPanelsChange(() => {
-      startTransition(() => {
-        setPanels(panelManager.getPanels(area));
-      });
+      const r: any = { ...React };
+
+      const start = r['startTransition'] as undefined | ((cb: () => void) => void);
+      if (typeof start === 'function') {
+        start(() => setPanels(panelManager.getPanels(area)));
+      } else {
+        startTransition(() => setPanels(panelManager.getPanels(area)));
+      }
     });
     return () => dispose.dispose();
   }, []);

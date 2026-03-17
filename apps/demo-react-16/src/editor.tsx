@@ -2,6 +2,7 @@
  * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
  * SPDX-License-Identifier: MIT
  */
+import React from 'react';
 
 import { EditorRenderer, FreeLayoutEditorProvider } from '@flowgram.ai/free-layout-editor';
 
@@ -15,10 +16,12 @@ import './index.css';
 export const Editor = () => {
   const editorProps = useEditorProps();
   return (
+    /** @ts-ignore */
     <FreeLayoutEditorProvider {...editorProps}>
       <div className="demo-free-container">
         <div className="demo-free-layout">
           <NodeAddPanel />
+          {/* @ts-ignore */}
           <EditorRenderer className="demo-free-editor" />
         </div>
         <Tools />

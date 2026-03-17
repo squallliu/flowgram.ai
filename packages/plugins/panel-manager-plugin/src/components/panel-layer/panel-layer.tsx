@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+import * as React from 'react';
+
 import clsx from 'clsx';
 
 import { useGlobalCSS } from '../../hooks/use-global-css';

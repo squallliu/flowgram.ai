@@ -26,7 +26,7 @@
     "inversify": "^6.0.1",
     "clsx": "^1.1.1",
     "nanoid": "^5.0.9",
-    "zustand": "^5.0.8",
+    "zustand": "^4.5.5",
     "use-sync-external-store": "^1.6.0",
     "@flowgram.ai/core": "workspace:*",
     "@flowgram.ai/utils": "workspace:*"
