@@ -91,6 +91,8 @@ export interface LayoutEdge {
 export interface DagreNode {
   width: number;
   height: number;
+  x: number;
+  y: number;
   order: number;
   rank: number;
 }

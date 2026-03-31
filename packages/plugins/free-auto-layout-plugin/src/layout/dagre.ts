@@ -19,6 +19,7 @@ export class DagreLayout {
   public layout(): void {
     this.graphSetData();
     this.dagreLayout();
+    this.alignTopEdgeIfNeeded();
     this.layoutSetPosition();
   }
 
@@ -112,6 +113,38 @@ export class DagreLayout {
     });
   }
 
+  private alignTopEdgeIfNeeded(): void {
+    const { alignTopEdge } = this.store.options;
+    const { rankdir, marginy = 0 } = this.store.config;
+
+    if (!alignTopEdge || (rankdir !== 'LR' && rankdir !== 'RL')) {
+      return;
+    }
+
+    const rankGroups = this.rankGroup(this.graph);
+
+    rankGroups.forEach((indexSet) => {
+      const graphNodes = Array.from(indexSet)
+        .map((id) => this.graph.node(id) as DagreNode | undefined)
+        .filter(Boolean) as DagreNode[];
+
+      if (graphNodes.length === 0) {
+        return;
+      }
+
+      const minTop = Math.min(...graphNodes.map((node) => node.y - node.height / 2));
+      const deltaY = marginy - minTop;
+
+      if (deltaY === 0) {
+        return;
+      }
+
+      graphNodes.forEach((node) => {
+        node.y += deltaY;
+      });
+    });
+  }
+
   private normalizeNumber(number: number): number {
     // NaN 转为 0，异常兜底，一般不会出现
     return Number.isNaN(number) ? 0 : number;
@@ -197,7 +230,10 @@ export class DagreLayout {
   private rankGroup(g: DagreGraph): Map<number, Set<string>> {
     const rankGroup = new Map<number, Set<string>>();
     g.nodes().forEach((i) => {
-      const graphNode = g.node(i);
+      const graphNode = g.node(i) as DagreNode | undefined;
+      if (!graphNode || typeof graphNode.rank !== 'number') {
+        return;
+      }
       const rank = graphNode.rank;
       if (!rankGroup.has(rank)) {
         rankGroup.set(rank, new Set());

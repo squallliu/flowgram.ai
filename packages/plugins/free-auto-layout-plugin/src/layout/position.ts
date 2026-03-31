@@ -47,12 +47,8 @@ export class LayoutPosition {
     const { layoutNode, step } = params;
     const { transform } = layoutNode.entity.transform;
 
-    // layoutNode.position.y is the center point, but the canvas node origin is at the top edge.
-    // Subtract half the inner height to convert center-y to top-edge-y.
-    // When alignTopEdge is true, skip the offset so all nodes' top edges share the same horizontal line.
-    const centerToTopEdgeOffset = this.store.options.alignTopEdge
-      ? 0
-      : (layoutNode.size.height - layoutNode.padding.top - layoutNode.padding.bottom) / 2;
+    const centerToTopEdgeOffset =
+      (layoutNode.size.height - layoutNode.padding.top - layoutNode.padding.bottom) / 2;
 
     const layoutPosition: PositionSchema = {
       x: layoutNode.position.x + layoutNode.offset.x,
