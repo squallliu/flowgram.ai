@@ -3,28 +3,12 @@
  * SPDX-License-Identifier: MIT
  */
 
-/**
- * Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
- * SPDX-License-Identifier: MIT
- */
-
 import { type IPoint, Rectangle, Emitter, Compare } from '@flowgram.ai/utils';
 import { FlowNodeTransformData } from '@flowgram.ai/document';
-import {
-  Entity,
-  type EntityOpts,
-  PlaygroundConfigEntity,
-  TransformData,
-  type EntityRegistry,
-} from '@flowgram.ai/core';
+import { Entity, type EntityOpts, PlaygroundConfigEntity, TransformData } from '@flowgram.ai/core';
 
 import { type WorkflowDocument } from '../workflow-document';
-import {
-  type WorkflowPortType,
-  getPortEntityId,
-  WORKFLOW_LINE_ENTITY,
-  domReactToBounds,
-} from '../utils/statics';
+import { type WorkflowPortType, getPortEntityId, domReactToBounds } from '../utils/statics';
 import { locationConfigToPoint } from '../utils/location-config-to-point';
 import { type WorkflowNodeMeta, LinePointLocation, LinePoint } from '../typings';
 import { type WorkflowNodeEntity } from './workflow-node-entity';
@@ -312,20 +296,9 @@ export class WorkflowPortEntity extends Entity<WorkflowPortEntityOpts> {
   /**
    * 当前点位上连接的线条（包含 isDrawing === true 的线条）
    */
-  get allLines() {
-    const lines: WorkflowLineEntity[] = [];
-    // TODO: 后续 sdk 支持 getEntitiesByType 单独根据 type 获取功能后修改
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const allLines = this.entityManager.getEntities<WorkflowLineEntity>({
-      type: WORKFLOW_LINE_ENTITY,
-    } as EntityRegistry);
-    allLines.forEach((line) => {
-      // 不包含 drawing 的线条
-      if (line.toPort === this || line.fromPort === this) {
-        lines.push(line);
-      }
-    });
-    return lines;
+  get allLines(): WorkflowLineEntity[] {
+    const document = this.node.document as WorkflowDocument;
+    return document.linesManager.getLinesByPortId(this.id);
   }
 
   update(data: Exclude<WorkflowPort, 'portID' | 'type'>) {

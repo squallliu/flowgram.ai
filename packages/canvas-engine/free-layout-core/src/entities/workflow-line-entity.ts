@@ -4,7 +4,7 @@
  */
 
 import { isEqual } from 'lodash-es';
-import { domUtils, type IPoint, Rectangle, Emitter } from '@flowgram.ai/utils';
+import { domUtils, type IPoint, Rectangle, Emitter, Disposable } from '@flowgram.ai/utils';
 import { Entity, type EntityOpts } from '@flowgram.ai/core';
 
 import { type WorkflowLinesManager } from '../workflow-lines-manager';
@@ -232,6 +232,9 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
       this.toPort?.validate();
     });
     this.toDispose.push(this._onLineDataChangeEmitter);
+    this.preDispose.push(
+      Disposable.create(() => this.linesManager.rebindLinePorts(this, this.info, undefined))
+    );
     // this.onDispose(() => {
     // this._infoDispose.dispose();
     // });
@@ -310,14 +313,16 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
       this.linesManager.canAddLine(this.fromPort!, toPort, true)
     ) {
       const { node, portID } = toPort;
-      this._to = node;
-      this.info.drawingTo = undefined;
-      this.info.to = node.id;
-      this.info.toPort = portID;
+      this.updateInfo((nextInfo) => {
+        nextInfo.drawingTo = undefined;
+        nextInfo.to = node.id;
+        nextInfo.toPort = portID;
+      });
     } else {
-      this._to = undefined;
-      this.info.to = undefined;
-      this.info.toPort = '';
+      this.updateInfo((nextInfo) => {
+        nextInfo.to = undefined;
+        nextInfo.toPort = '';
+      });
     }
     /**
      * 移动到端口又快速移出，需要更新 prePort 的状态
@@ -325,7 +330,6 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
     if (prePort) {
       prePort.validate();
     }
-    this.fireChange();
   }
 
   setFromPort(fromPort?: WorkflowPortEntity) {
@@ -343,14 +347,16 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
       this.linesManager.canAddLine(fromPort, this.toPort!, true)
     ) {
       const { node, portID } = fromPort;
-      this._from = node;
-      this.info.drawingFrom = undefined;
-      this.info.from = node.id;
-      this.info.fromPort = portID;
+      this.updateInfo((nextInfo) => {
+        nextInfo.drawingFrom = undefined;
+        nextInfo.from = node.id;
+        nextInfo.fromPort = portID;
+      });
     } else {
-      this._from = undefined;
-      this.info.from = undefined;
-      this.info.fromPort = '';
+      this.updateInfo((nextInfo) => {
+        nextInfo.from = undefined;
+        nextInfo.fromPort = '';
+      });
     }
     /**
      * 移动到端口又快速移出，需要更新 prePort 的状态
@@ -358,7 +364,6 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
     if (prePort) {
       prePort.validate();
     }
-    this.fireChange();
   }
 
   /**
@@ -367,28 +372,42 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
   set drawingTo(pos: LinePoint | undefined) {
     const oldDrawingTo = this.info.drawingTo;
     if (!pos) {
-      this.info.drawingTo = undefined;
-      this.fireChange();
+      if (oldDrawingTo === undefined) {
+        this.fireChange();
+        return;
+      }
+      this.updateInfo((nextInfo) => {
+        nextInfo.drawingTo = undefined;
+      });
       return;
     }
     if (!oldDrawingTo || pos.x !== oldDrawingTo.x || pos.y !== oldDrawingTo.y) {
-      this.info.to = undefined;
-      this.info.drawingTo = pos;
-      this.fireChange();
+      this.updateInfo((nextInfo) => {
+        nextInfo.to = undefined;
+        nextInfo.toPort = '';
+        nextInfo.drawingTo = pos;
+      });
     }
   }
 
   set drawingFrom(pos: LinePoint | undefined) {
     const oldDrawingFrom = this.info.drawingFrom;
     if (!pos) {
-      this.info.drawingFrom = undefined;
-      this.fireChange();
+      if (oldDrawingFrom === undefined) {
+        this.fireChange();
+        return;
+      }
+      this.updateInfo((nextInfo) => {
+        nextInfo.drawingFrom = undefined;
+      });
       return;
     }
     if (!oldDrawingFrom || pos.x !== oldDrawingFrom.x || pos.y !== oldDrawingFrom.y) {
-      this.info.from = undefined;
-      this.info.drawingFrom = pos;
-      this.fireChange();
+      this.updateInfo((nextInfo) => {
+        nextInfo.from = undefined;
+        nextInfo.fromPort = '';
+        nextInfo.drawingFrom = pos;
+      });
     }
   }
 
@@ -523,13 +542,28 @@ export class WorkflowLineEntity extends Entity<WorkflowLineEntityOpts> {
    * @param info 线条信息
    */
   protected initInfo(info: WorkflowLineInfo): void {
-    if (!isEqual(info, this.info)) {
-      this.info = info;
-      this._from = info.from ? this.document.getNode(info.from) : undefined;
-      this._to = info.to ? this.document.getNode(info.to) : undefined;
-      this._lineData = info.data;
-      this.fireChange();
+    this.applyInfo(info);
+  }
+
+  private updateInfo(mutator: (nextInfo: WorkflowLineInfo) => void): void {
+    const nextInfo = {
+      ...this.info,
+    };
+    mutator(nextInfo);
+    this.applyInfo(nextInfo);
+  }
+
+  private applyInfo(nextInfo: WorkflowLineInfo): void {
+    if (isEqual(nextInfo, this.info)) {
+      return;
     }
+    const prevInfo = this.info;
+    this.info = nextInfo;
+    this._from = nextInfo.from ? this.document.getNode(nextInfo.from) : undefined;
+    this._to = nextInfo.to ? this.document.getNode(nextInfo.to) : undefined;
+    this._lineData = nextInfo.data;
+    this.linesManager.rebindLinePorts(this, prevInfo, nextInfo);
+    this.fireChange();
   }
 
   // 校验连线是否为错误态

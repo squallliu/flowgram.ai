@@ -8,11 +8,17 @@ import { Rectangle } from '@flowgram.ai/utils';
 import { type WorkflowNodeEntity } from '../entities/workflow-node-entity';
 export type WorkflowPortType = 'input' | 'output';
 
+export const getPortEntityIdByNodeId = (
+  nodeId: string,
+  portType: WorkflowPortType,
+  portID: string | number = ''
+): string => `port_${portType}_${nodeId}_${portID}`;
+
 export const getPortEntityId = (
   node: WorkflowNodeEntity,
   portType: WorkflowPortType,
-  portID: string | number = '',
-): string => `port_${portType}_${node.id}_${portID}`;
+  portID: string | number = ''
+): string => getPortEntityIdByNodeId(node.id, portType, portID);
 
 export const WORKFLOW_LINE_ENTITY = 'WorkflowLineEntity';
 

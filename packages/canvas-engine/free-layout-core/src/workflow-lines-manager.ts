@@ -11,6 +11,7 @@ import { EntityManager, PlaygroundConfigEntity } from '@flowgram.ai/core';
 
 import { WorkflowDocumentOptions } from './workflow-document-option';
 import { type WorkflowDocument } from './workflow-document';
+import { getPortEntityIdByNodeId } from './utils/statics';
 import { WorkflowPortType } from './utils';
 import {
   LineColor,
@@ -32,6 +33,7 @@ import { WorkflowLineRenderData } from './entity-datas';
 import {
   LINE_HOVER_DISTANCE,
   WorkflowLineEntity,
+  type WorkflowLineInfo,
   type WorkflowLinePortInfo,
   type WorkflowNodeEntity,
   WorkflowPortEntity,
@@ -45,6 +47,8 @@ export class WorkflowLinesManager {
   protected document: WorkflowDocument;
 
   protected toDispose = new DisposableCollection();
+
+  protected readonly portLineMap = new Map<string, Set<WorkflowLineEntity>>();
   // 线条类型
 
   protected _lineType: LineRenderType = LineType.BEZIER;
@@ -126,6 +130,72 @@ export class WorkflowLinesManager {
 
   getAllLines(): WorkflowLineEntity[] {
     return this.entityManager.getEntities(WorkflowLineEntity);
+  }
+
+  getLinesByPortId(portId: string): WorkflowLineEntity[] {
+    return Array.from(this.portLineMap.get(portId) || []);
+  }
+
+  rebindLinePorts(
+    line: WorkflowLineEntity,
+    prevInfo?: WorkflowLineInfo,
+    nextInfo?: WorkflowLineInfo
+  ): void {
+    const prevFromPortId = this.getLinePortId(prevInfo, 'output');
+    const prevToPortId = this.getLinePortId(prevInfo, 'input');
+    const nextFromPortId = this.getLinePortId(nextInfo, 'output');
+    const nextToPortId = this.getLinePortId(nextInfo, 'input');
+
+    if (prevFromPortId !== nextFromPortId) {
+      this.detachLineFromPortId(line, prevFromPortId);
+      this.attachLineToPortId(line, nextFromPortId);
+    }
+
+    if (prevToPortId !== nextToPortId) {
+      this.detachLineFromPortId(line, prevToPortId);
+      this.attachLineToPortId(line, nextToPortId);
+    }
+  }
+
+  private attachLineToPortId(line: WorkflowLineEntity, portId?: string): void {
+    if (!portId) {
+      return;
+    }
+    let lines = this.portLineMap.get(portId);
+    if (!lines) {
+      lines = new Set();
+      this.portLineMap.set(portId, lines);
+    }
+    lines.add(line);
+  }
+
+  private detachLineFromPortId(line: WorkflowLineEntity, portId?: string): void {
+    if (!portId) {
+      return;
+    }
+    const lines = this.portLineMap.get(portId);
+    if (!lines) {
+      return;
+    }
+    lines.delete(line);
+    if (!lines.size) {
+      this.portLineMap.delete(portId);
+    }
+  }
+
+  private getLinePortId(
+    info: WorkflowLineInfo | undefined,
+    portType: WorkflowPortType
+  ): string | undefined {
+    if (!info) {
+      return undefined;
+    }
+    const nodeId = portType === 'output' ? info.from : info.to;
+    if (!nodeId) {
+      return undefined;
+    }
+    const portId = portType === 'output' ? info.fromPort : info.toPort;
+    return getPortEntityIdByNodeId(nodeId, portType, portId);
   }
 
   getAllAvailableLines(): WorkflowLineEntity[] {
@@ -274,6 +344,7 @@ export class WorkflowLinesManager {
   isDrawing = false;
 
   dispose(): void {
+    this.portLineMap.clear();
     this.toDispose.dispose();
   }
 

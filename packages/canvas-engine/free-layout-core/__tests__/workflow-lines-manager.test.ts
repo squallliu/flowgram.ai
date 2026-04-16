@@ -228,6 +228,171 @@ describe('workflow-lines-manager', () => {
     }
   });
 
+  it('indexes lines by port in multi-port nodes', () => {
+    document.createWorkflowNode({
+      id: 'multi_start',
+      type: 'start',
+      meta: {
+        position: { x: 0, y: 120 },
+        defaultPorts: [
+          { type: 'output', portID: 'a' },
+          { type: 'output', portID: 'b' },
+        ],
+      },
+    });
+    document.createWorkflowNode({
+      id: 'multi_end',
+      type: 'end',
+      meta: {
+        position: { x: 400, y: 120 },
+        defaultPorts: [
+          { type: 'input', portID: 'x' },
+          { type: 'input', portID: 'y' },
+        ],
+      },
+    });
+
+    const lineAX = linesManager.createLine({
+      from: 'multi_start',
+      fromPort: 'a',
+      to: 'multi_end',
+      toPort: 'x',
+    })!;
+    const lineBY = linesManager.createLine({
+      from: 'multi_start',
+      fromPort: 'b',
+      to: 'multi_end',
+      toPort: 'y',
+    })!;
+    const lineAY = linesManager.createLine({
+      from: 'multi_start',
+      fromPort: 'a',
+      to: 'multi_end',
+      toPort: 'y',
+    })!;
+
+    const multiStart = document.getNode('multi_start')!;
+    const multiEnd = document.getNode('multi_end')!;
+    const outputPortA = multiStart.ports.getPortEntityByKey('output', 'a');
+    const outputPortB = multiStart.ports.getPortEntityByKey('output', 'b');
+    const inputPortX = multiEnd.ports.getPortEntityByKey('input', 'x');
+    const inputPortY = multiEnd.ports.getPortEntityByKey('input', 'y');
+
+    expect(outputPortA.allLines).toEqual([lineAX, lineAY]);
+    expect(outputPortB.allLines).toEqual([lineBY]);
+    expect(inputPortX.allLines).toEqual([lineAX]);
+    expect(inputPortY.allLines).toEqual([lineBY, lineAY]);
+
+    lineAY.dispose();
+
+    expect(outputPortA.allLines).toEqual([lineAX]);
+    expect(outputPortB.allLines).toEqual([lineBY]);
+    expect(inputPortX.allLines).toEqual([lineAX]);
+    expect(inputPortY.allLines).toEqual([lineBY]);
+  });
+
+  it('returns indexed lines by port id for custom ports', () => {
+    document.createWorkflowNode({
+      id: 'late_start',
+      type: 'start',
+      meta: {
+        position: { x: 0, y: 240 },
+        defaultPorts: [{ type: 'output', portID: 'dynamic' }],
+      },
+    });
+    document.createWorkflowNode({
+      id: 'late_end',
+      type: 'end',
+      meta: {
+        position: { x: 400, y: 240 },
+        defaultPorts: [{ type: 'input', portID: 'target' }],
+      },
+    });
+
+    const line = linesManager.createLine({
+      from: 'late_start',
+      fromPort: 'dynamic',
+      to: 'late_end',
+      toPort: 'target',
+    })!;
+
+    expect(linesManager.getLinesByPortId('port_output_late_start_dynamic')).toEqual([line]);
+    expect(linesManager.getLinesByPortId('port_input_late_end_target')).toEqual([line]);
+
+    line.dispose();
+
+    expect(linesManager.getLinesByPortId('port_output_late_start_dynamic')).toEqual([]);
+    expect(linesManager.getLinesByPortId('port_input_late_end_target')).toEqual([]);
+  });
+
+  it('updates indexed lines when a drawing line switches target ports', () => {
+    document.createWorkflowNode({
+      id: 'draw_end',
+      type: 'end',
+      meta: {
+        position: { x: 400, y: 360 },
+        defaultPorts: [
+          { type: 'input', portID: 'x' },
+          { type: 'input', portID: 'y' },
+        ],
+      },
+    });
+
+    const line = linesManager.createLine({
+      from: 'start_0',
+      drawingTo: { x: 100, y: 100, location: 'left' },
+    })!;
+    const drawEnd = document.getNode('draw_end')!;
+    const inputPortX = drawEnd.ports.getPortEntityByKey('input', 'x');
+    const inputPortY = drawEnd.ports.getPortEntityByKey('input', 'y');
+
+    line.setToPort(inputPortX);
+    expect(inputPortX.allLines).toEqual([line]);
+    expect(inputPortX.availableLines).toEqual([]);
+
+    line.setToPort(inputPortY);
+    expect(inputPortX.allLines).toEqual([]);
+    expect(inputPortY.allLines).toEqual([line]);
+    expect(inputPortY.availableLines).toEqual([]);
+
+    line.drawingTo = { x: 120, y: 120, location: 'left' };
+    expect(inputPortY.allLines).toEqual([]);
+  });
+
+  it('updates indexed lines when a drawing line switches source ports', () => {
+    document.createWorkflowNode({
+      id: 'draw_start',
+      type: 'start',
+      meta: {
+        position: { x: 0, y: 480 },
+        defaultPorts: [
+          { type: 'output', portID: 'a' },
+          { type: 'output', portID: 'b' },
+        ],
+      },
+    });
+
+    const line = linesManager.createLine({
+      to: 'end_0',
+      drawingFrom: { x: -100, y: 0, location: 'right' },
+    })!;
+    const drawStart = document.getNode('draw_start')!;
+    const outputPortA = drawStart.ports.getPortEntityByKey('output', 'a');
+    const outputPortB = drawStart.ports.getPortEntityByKey('output', 'b');
+
+    line.setFromPort(outputPortA);
+    expect(outputPortA.allLines).toEqual([line]);
+    expect(outputPortA.availableLines).toEqual([]);
+
+    line.setFromPort(outputPortB);
+    expect(outputPortA.allLines).toEqual([]);
+    expect(outputPortB.allLines).toEqual([line]);
+    expect(outputPortB.availableLines).toEqual([]);
+
+    line.drawingFrom = { x: -120, y: 0, location: 'right' };
+    expect(outputPortB.allLines).toEqual([]);
+  });
+
   describe('flowing line support', () => {
     it('should return flowing color when line is flowing', () => {
       const documentOptions: WorkflowDocumentOptions = {
