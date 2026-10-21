@@ -14,9 +14,36 @@
 
 FlowGramは、構成可能で、視覚的で、統合しやすく、拡張可能なワークフロー開発フレームワーク＆ツールキットです。
 私たちの目標は、開発者がAIワークフロープラットフォームを**より速く**、**よりシンプルに**構築できるよう支援することです。
-FlowGramには、ワークフロー開発用の組み込みツール一式が付属しています。視覚的なフローキャンバス、ノード構成フォーム、変数スコープチェーン、すぐに使えるマテリアル（LLM、条件、コードエディターなど）です。これは既製のワークフロープラットフォームではありません。あなたのワークフロープラットフォームを構築するためのフレームワークとツールキットです。
+FlowGramには、ワークフロー開発用の組み込みツール一式が付属しています。視覚的なフローキャンバス、ノード構成フォーム、変数スコープチェーン、すぐに使えるマテリアル（LLM、条件、コードエディターなど）です。フレームワークの各パッケージは独自のワークフロープラットフォームを構築するための基盤を提供し、FlowGram DesktopはそれらをネイティブのAIエージェント用ワークスペースに統合します。
 
 詳細は[FlowGram.AI 🌐](https://flowgram.ai)をご覧ください。
+
+## 🖥️ FlowGram Desktop
+
+FlowGram Desktopは、macOSとWindows向けのネイティブなAIエージェント用ワークスペースです。対話とビジュアルキャンバスを使って、ワークフローの構築、実行、デバッグ、再利用を行えます。
+
+- **構築：** チャットでタスクを説明し、キャンバス上でノード、条件、並列分岐、合流、ループを調整できます。
+- **デバッグ：** 個別のノードをテストし、入出力を確認して、実行経路や過去のワークフローのスナップショットを振り返れます。
+- **再利用：** バージョン管理されたワークフローを公開してHTTPやMCP経由で呼び出したり、別のワークフローから利用したりできます。
+- **管理：** プロジェクトごとにワークフローとチャットを整理し、プロジェクトをインポート・エクスポートできます。UIは英語と簡体字中国語に対応し、ライト・ダークテーマを選べます。6つの業界別サンプルプロジェクトで始められます。
+
+### Desktopをダウンロード
+
+[⬇ 最新の成功したビルドを確認](https://github.com/bytedance/flowgram.ai/actions/workflows/desktop-build.yml?query=is%3Asuccess)
+
+プレビュー版のインストーラーはDesktop Buildで生成されます。以下のリンクから検証済みビルドをダウンロードできます。新しいバージョンは上のリンクから成功した実行を開き、**Artifacts**でプラットフォームを選択してください。
+
+| プラットフォーム | 検証済みプレビュー版 |
+| --- | --- |
+| macOS · Apple Silicon (ARM64) | [ZIPをダウンロード](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12264454194) · `.dmg` |
+| macOS · Intel | [ZIPをダウンロード](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12266052754) · `.dmg` |
+| Windows 10/11 · x64 | [ZIPをダウンロード](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12265318840) · `-setup.exe` |
+
+ダウンロードにはGitHubへのログインが必要です。ZIPを展開し、macOSでは`.dmg`を開き、Windowsでは`-setup.exe`を実行してください。各ZIPにはインストーラー、`SHA256SUMS.txt`、`build-info.json`が含まれます。成果物の保存期間は14日間です。直接リンクが期限切れの場合は、最新ビルドへのリンクをご利用ください。プレビュー版インストーラーは未署名で、macOS版は公証されていません。
+
+[![FlowGram Desktopの紹介動画を見る](./apps/docs/src/public/desktop/flowgram-desktop-en-poster.jpg)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1)
+
+[▶ 45秒の紹介動画を見る（英語）](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1) · [Desktopのセットアップと開発](./apps/desktop/README.md)
 
 ## 🎬 デモ
 

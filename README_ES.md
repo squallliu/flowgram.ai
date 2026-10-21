@@ -14,9 +14,36 @@
 
 FlowGram es un marco y conjunto de herramientas de desarrollo de flujos de trabajo componible, visual, fácil de integrar y extensible.
 Nuestro objetivo es ayudar a los desarrolladores a crear plataformas de flujo de trabajo de IA de forma **más rápida** y **sencilla**.
-FlowGram viene con un conjunto de herramientas integradas para el desarrollo de flujos de trabajo: un lienzo de flujo visual, formularios de configuración de nodos, una cadena de alcance de variables y materiales listos para usar (LLM, Condición, Editor de código, etc.). No es una plataforma de flujo de trabajo ya hecha; es el marco y el conjunto de herramientas para crear la suya.
+FlowGram viene con un conjunto de herramientas integradas para el desarrollo de flujos de trabajo: un lienzo de flujo visual, formularios de configuración de nodos, una cadena de alcance de variables y materiales listos para usar (LLM, Condición, Editor de código, etc.). Los paquetes del marco proporcionan los componentes para crear su propia plataforma de flujos de trabajo; FlowGram Desktop los reúne en un espacio de trabajo nativo para agentes de IA.
 
 Obtenga más información en [FlowGram.AI 🌐](https://flowgram.ai)
+
+## 🖥️ FlowGram Desktop
+
+FlowGram Desktop es un espacio de trabajo nativo para agentes de IA en macOS y Windows. Cree, ejecute, depure y reutilice flujos de trabajo mediante conversaciones y un lienzo visual.
+
+- **Crear:** describa una tarea en el chat y ajuste los nodos, las condiciones, las ramas paralelas, las uniones y los bucles en el lienzo.
+- **Depurar:** pruebe nodos individuales, inspeccione entradas y salidas y revise las rutas de ejecución y las instantáneas históricas de los flujos de trabajo.
+- **Reutilizar:** publique flujos de trabajo con versiones para clientes HTTP y MCP, o invóquelos desde otros flujos de trabajo.
+- **Organizar:** gestione flujos de trabajo y conversaciones por proyecto, importe y exporte proyectos y utilice la interfaz en inglés o chino simplificado con temas claro y oscuro. Seis proyectos de ejemplo de distintos sectores le ayudan a empezar.
+
+### Descargar Desktop
+
+[⬇ Ver las últimas compilaciones correctas](https://github.com/bytedance/flowgram.ai/actions/workflows/desktop-build.yml?query=is%3Asuccess)
+
+Desktop Build genera los instaladores de vista previa. Los siguientes enlaces descargan la compilación verificada. Para obtener una más reciente, abra el enlace anterior, seleccione una ejecución correcta y elija su plataforma en **Artifacts**.
+
+| Plataforma | Descargar vista previa verificada |
+| --- | --- |
+| macOS · Apple Silicon (ARM64) | [Descargar ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12264454194) · `.dmg` |
+| macOS · Intel | [Descargar ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12266052754) · `.dmg` |
+| Windows 10/11 · x64 | [Descargar ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12265318840) · `-setup.exe` |
+
+Inicie sesión en GitHub para descargar. Descomprima el ZIP y abra el archivo `.dmg` en macOS o ejecute `-setup.exe` en Windows. Cada ZIP incluye el instalador, `SHA256SUMS.txt` y `build-info.json`. Los artefactos caducan a los 14 días; si un enlace directo ha caducado, use el enlace a las últimas compilaciones. Estos instaladores de vista previa no están firmados; las versiones de macOS no están notarizadas.
+
+[![Ver el vídeo de presentación de FlowGram Desktop](./apps/docs/src/public/desktop/flowgram-desktop-en-poster.jpg)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1)
+
+[▶ Ver el vídeo de presentación de 45 segundos (en inglés)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1) · [Configuración y desarrollo de Desktop](./apps/desktop/README.md)
 
 ## 🎬 Demostración
 

@@ -14,9 +14,36 @@
 
 FlowGram 是一个可组合、可视化、易于集成且可扩展的工作流开发框架与工具集。
 我们的目标是帮助开发者以更快、更简单的方式搭建 AI 工作流平台。
-FlowGram 内置开箱开箱即用的工作流开发能力：可视化流程画布、节点配置表单、变量作用域链，以及开箱即用的物料（LLM、条件、代码编辑器等）。这并非一个现成的工作流平台，而是帮助你构建平台的框架与工具。
+FlowGram 内置开箱即用的工作流开发能力：可视化流程画布、节点配置表单、变量作用域链，以及开箱即用的物料（LLM、条件、代码编辑器等）。框架包提供构建工作流平台的基础能力，FlowGram Desktop 则将这些能力整合为原生桌面 Agent 工作台。
 
 了解更多 [FlowGram.AI 🌐](https://flowgram.ai)
+
+## 🖥️ FlowGram Desktop
+
+FlowGram Desktop 是面向 macOS 和 Windows 的原生桌面 Agent 工作台，通过对话与可视化画布衔接工作流的搭建、运行、调试和复用。
+
+- **搭建：** 用对话描述需求，在画布中调整节点、条件、并行分支、汇合与循环。
+- **调试：** 单独测试节点，查看输入输出，回看执行路径与历史工作流快照。
+- **复用：** 发布带版本的工作流，供 HTTP、MCP 或其他工作流调用。
+- **管理：** 按项目组织工作流与会话，导入导出工程，支持中英文界面与明暗主题，并内置六套行业示例项目。
+
+### 下载 Desktop
+
+[⬇ 查看最新成功构建](https://github.com/bytedance/flowgram.ai/actions/workflows/desktop-build.yml?query=is%3Asuccess)
+
+预览安装包由 Desktop Build 自动生成。下方链接可下载已验证的构建；获取更新版本请打开上方入口，选择最近成功的运行，在 **Artifacts** 中选择对应平台。
+
+| 平台 | 下载已验证预览版 |
+| --- | --- |
+| macOS · Apple Silicon (ARM64) | [下载 ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12264454194) · `.dmg` |
+| macOS · Intel | [下载 ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12266052754) · `.dmg` |
+| Windows 10/11 · x64 | [下载 ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12265318840) · `-setup.exe` |
+
+下载需登录 GitHub。解压后，macOS 打开 `.dmg`，Windows 运行 `-setup.exe`。每份 ZIP 包含安装器、`SHA256SUMS.txt` 和 `build-info.json`。产物保留 14 天，直接链接失效后请使用最新构建入口。这些预览安装包尚未签名，macOS 版本尚未公证。
+
+[![观看 FlowGram Desktop 英文产品视频](./apps/docs/src/public/desktop/flowgram-desktop-en-poster.jpg)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1)
+
+[▶ 观看 45 秒产品视频（英文）](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1) · [Desktop 使用与开发说明](./apps/desktop/README.md)
 
 ## 🎬 演示
 
