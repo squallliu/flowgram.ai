@@ -27,23 +27,23 @@ FlowGram Desktop 是面向 macOS 和 Windows 的原生桌面 Agent 工作台，�
 - **复用：** 发布带版本的工作流，供 HTTP、MCP 或其他工作流调用。
 - **管理：** 按项目组织工作流与会话，导入导出工程，支持中英文界面与明暗主题，并内置六套行业示例项目。
 
+[![观看 FlowGram Desktop 英文产品视频](https://flowgram.ai/desktop/flowgram-desktop-en-poster.jpg)](https://flowgram.ai/desktop/flowgram-desktop-en.mp4)
+
+[▶ 观看 45 秒产品视频（英文）](https://flowgram.ai/desktop/flowgram-desktop-en.mp4) · [Desktop 使用与开发说明](./apps/desktop/README.md)
+
 ### 下载 Desktop
 
-[⬇ 查看最新成功构建](https://github.com/bytedance/flowgram.ai/actions/workflows/desktop-build.yml?query=is%3Asuccess)
+[⬇ 最新预览版](https://github.com/bytedance/flowgram.ai/releases/tag/desktop-preview)
 
-预览安装包由 Desktop Build 自动生成。下方链接可下载已验证的构建；获取更新版本请打开上方入口，选择最近成功的运行，在 **Artifacts** 中选择对应平台。
+选择平台下载最新预览版。三个平台全部构建成功后自动更新安装包，下载地址保持不变。
 
-| 平台 | 下载已验证预览版 |
+| 平台 | 下载 |
 | --- | --- |
-| macOS · Apple Silicon (ARM64) | [下载 ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12264454194) · `.dmg` |
-| macOS · Intel | [下载 ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12266052754) · `.dmg` |
-| Windows 10/11 · x64 | [下载 ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12265318840) · `-setup.exe` |
+| macOS · Apple Silicon (ARM64) | [下载 DMG](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_aarch64-apple-darwin.dmg) |
+| macOS · Intel | [下载 DMG](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_x86_64-apple-darwin.dmg) |
+| Windows 10/11 · x64 | [下载 EXE](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_x86_64-pc-windows-msvc-setup.exe) |
 
-下载需登录 GitHub。解压后，macOS 打开 `.dmg`，Windows 运行 `-setup.exe`。每份 ZIP 包含安装器、`SHA256SUMS.txt` 和 `build-info.json`。产物保留 14 天，直接链接失效后请使用最新构建入口。这些预览安装包尚未签名，macOS 版本尚未公证。
-
-[![观看 FlowGram Desktop 英文产品视频](./apps/docs/src/public/desktop/flowgram-desktop-en-poster.jpg)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1)
-
-[▶ 观看 45 秒产品视频（英文）](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1) · [Desktop 使用与开发说明](./apps/desktop/README.md)
+直接下载安装器，无需登录 GitHub。macOS 打开 .dmg，Windows 运行安装程序 .exe。校验和与构建信息可在发布页查看。预览安装包尚未签名，macOS 版本尚未公证。
 
 ## 🎬 演示
 

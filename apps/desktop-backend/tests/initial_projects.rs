@@ -7,6 +7,56 @@ use flowgram_desktop_backend::{
 use serde_json::{Value, json};
 
 #[tokio::test]
+async fn default_examples_are_english_throughout_projects_workflows_conversations_and_runs() {
+    fn assert_english(text: &str, scope: &str) {
+        assert!(
+            !text.chars().any(|c| ('\u{3400}'..='\u{9fff}').contains(&c)),
+            "Unexpected Chinese text in {scope}"
+        );
+    }
+    let dir = tempfile::tempdir().unwrap();
+    let registry = Registry::open(dir.path()).await.unwrap();
+    assert!(registry.initialize_projects("").await.unwrap());
+    let projects = registry.projects().await;
+    assert_eq!(projects.len(), 6);
+    for project in projects {
+        assert!(project.name.starts_with("Example · "));
+        assert_english(&project.name, "project name");
+        let store = registry.resolve(&project.id).await.unwrap();
+        for workflow in store.workflows().await.unwrap() {
+            assert_english(&workflow.name, "workflow name");
+            assert_english(
+                &workflow.schema.to_string(),
+                "node titles, defaults and prompts",
+            );
+        }
+        for session in store.sessions().await.unwrap() {
+            assert_english(&session.title, "session title");
+            let conversation = store.conversation(&session.id, None).await.unwrap();
+            assert_english(&conversation.to_string(), "conversation and tool results");
+            for item in conversation["items"].as_array().unwrap() {
+                assert!(!item["content"].as_str().unwrap().contains('：'));
+            }
+        }
+        for run in store.runs().await.unwrap() {
+            assert_english(&serde_json::to_string(&run).unwrap(), "run record");
+            let definition = store.run_definition(&run.id).await.unwrap().unwrap();
+            assert_english(
+                &serde_json::to_string(&definition).unwrap(),
+                "historical canvas",
+            );
+        }
+        let guide = tokio::fs::read_to_string(
+            std::path::Path::new(&project.directory).join("assets/README.md"),
+        )
+        .await
+        .unwrap();
+        assert_english(&guide, "project guide");
+        assert!(guide.contains("## Workflows and inputs"));
+    }
+}
+
+#[tokio::test]
 async fn initial_content_has_real_workflows_runs_and_consistent_editable_conversations() {
     let dir = tempfile::tempdir().unwrap();
     let model =
@@ -15,7 +65,7 @@ async fn initial_content_has_real_workflows_runs_and_consistent_editable_convers
         .await
         .unwrap();
     let registry = Registry::open(dir.path()).await.unwrap();
-    assert!(registry.initialize_projects("zh-CN").await.unwrap());
+    assert!(registry.initialize_projects("zh-Hans-CN").await.unwrap());
     assert!(!registry.initialize_projects("en").await.unwrap());
     let projects = registry.projects().await;
     assert_eq!(projects.len(), 6);
@@ -223,7 +273,6 @@ async fn initialization_is_language_scoped_atomic_and_does_not_refill_cleared_or
  {
     let dir = tempfile::tempdir().unwrap();
     let registry = Registry::open(dir.path()).await.unwrap();
-    assert!(registry.initialize_projects("fr").await.is_err());
     assert!(!dir.path().join("projects").exists());
     // A partially built, unpublished staging area is disposable on retry.
     tokio::fs::create_dir(dir.path().join(".flowgram-initializing"))
@@ -236,7 +285,7 @@ async fn initialization_is_language_scoped_atomic_and_does_not_refill_cleared_or
     .await
     .unwrap();
     let (a, b) = tokio::join!(
-        registry.initialize_projects("en"),
+        registry.initialize_projects("fr-FR"),
         registry.initialize_projects("en")
     );
     assert_ne!(a.unwrap(), b.unwrap());

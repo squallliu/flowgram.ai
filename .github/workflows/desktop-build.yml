@@ -126,6 +126,9 @@ jobs:
         working-directory: apps/desktop
         run: node ../../common/scripts/install-run-rushx.js test
 
+      - name: Test preview packaging
+        run: node --test .github/scripts/desktop-preview.test.mjs
+
       - name: Lint desktop frontend
         working-directory: apps/desktop
         run: node ../../common/scripts/install-run-rushx.js lint
@@ -161,3 +164,47 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 14
+
+  publish-preview:
+    name: Update Desktop preview assets
+    needs: package
+    if: github.repository == 'bytedance/flowgram.ai' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          pattern: FlowGram-*
+          path: ${{ runner.temp }}/desktop-input
+
+      - name: Verify and prepare preview installers
+        env:
+          DESKTOP_PREVIEW_INPUT: ${{ runner.temp }}/desktop-input
+          DESKTOP_PREVIEW_OUTPUT: ${{ runner.temp }}/desktop-preview
+        run: |
+          node --test .github/scripts/desktop-preview.test.mjs
+          node .github/scripts/desktop-preview.mjs
+
+      - name: Update public preview downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PREVIEW_DIRECTORY: ${{ runner.temp }}/desktop-preview
+        run: |
+          set -euo pipefail
+          # Tag and release events notify the group. Update assets only;
+          # a missing channel must fail rather than creating or publishing one.
+          gh release view desktop-preview --json isDraft --jq \
+            'if .isDraft then error("Desktop preview channel must already be published") else empty end'
+          gh release upload desktop-preview \
+            "$PREVIEW_DIRECTORY"/*.dmg "$PREVIEW_DIRECTORY"/*.exe \
+            "$PREVIEW_DIRECTORY/SHA256SUMS.txt" "$PREVIEW_DIRECTORY/build-info.json" --clobber

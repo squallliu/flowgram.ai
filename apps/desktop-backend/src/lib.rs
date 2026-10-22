@@ -1,5 +1,6 @@
 pub mod agent;
 mod agent_stream;
+mod auto_layout;
 pub mod api;
 pub mod archive;
 pub mod control;

@@ -5,7 +5,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 
-import { Minus, Plus, Redo2, Scan, Undo2 } from 'lucide-react';
+import { LayoutTemplate, Loader2, Minus, Plus, Redo2, Scan, Undo2 } from 'lucide-react';
 import { useClientContext } from '@flowgram.ai/free-layout-editor';
 
 import { tx } from '../lib/i18n';
@@ -18,12 +18,16 @@ export function WorkflowCanvasToolbar({
   readOnly = false,
   onHistory,
   onFit,
+  onAutoLayout,
+  onNavigate,
 }: {
   readOnly?: boolean;
   leading?: ReactNode;
   trailing?: ReactNode;
   onHistory: (redo: boolean) => Promise<void>;
   onFit: () => void;
+  onAutoLayout: () => Promise<void>;
+  onNavigate?: () => void;
 }) {
   const { playground, history } = useClientContext();
   const [zoom, setZoom] = useState(() => playground.config.zoom);
@@ -31,7 +35,7 @@ export function WorkflowCanvasToolbar({
     undo: false,
     redo: false,
   });
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<'history' | 'layout' | null>(null);
   useEffect(() => {
     const updateHistory = () =>
       setHistoryState({
@@ -48,16 +52,45 @@ export function WorkflowCanvasToolbar({
     return () => subscriptions.forEach((subscription) => subscription.dispose());
   }, [history, playground]);
   async function changeHistory(redo: boolean) {
-    setBusy(true);
+    setBusy('history');
     try {
       await onHistory(redo);
     } finally {
-      setBusy(false);
+      setBusy(null);
+    }
+  }
+  async function autoLayout() {
+    if (busy) return;
+    setBusy('layout');
+    try {
+      await onAutoLayout();
+    } finally {
+      setBusy(null);
     }
   }
   const percentage = `${Math.round(zoom * 100)}%`;
   return (
-    <div className="workflow-canvas-tools">
+    <div
+      className="workflow-canvas-tools"
+      onPointerDownCapture={(event) => {
+        if (
+          !(event.target as Element).closest(
+            '[data-run-follow-control], [data-preserve-run-follow]'
+          )
+        )
+          onNavigate?.();
+      }}
+      onKeyDownCapture={(event) => {
+        if (
+          ['Enter', ' '].includes(event.key) &&
+          !(event.target as Element).closest(
+            '[data-run-follow-control], [data-preserve-run-follow]'
+          )
+        )
+          onNavigate?.();
+      }}
+      onWheelCapture={onNavigate}
+    >
       <div role="group" aria-label={tx('画布工具栏')} className="workflow-canvas-toolbar">
         {!readOnly && (
           <div className="workflow-canvas-tool-group">
@@ -67,7 +100,7 @@ export function WorkflowCanvasToolbar({
               size="icon"
               aria-label={tx('撤销更改')}
               title={`${tx('撤销更改')} (⌘/Ctrl Z)`}
-              disabled={busy || !historyState.undo}
+              disabled={!!busy || !historyState.undo}
               onClick={() => void changeHistory(false)}
             >
               <Undo2 />
@@ -77,10 +110,24 @@ export function WorkflowCanvasToolbar({
               size="icon"
               aria-label={tx('重做更改')}
               title={`${tx('重做更改')} (⌘/Ctrl Shift Z)`}
-              disabled={busy || !historyState.redo}
+              disabled={!!busy || !historyState.redo}
               onClick={() => void changeHistory(true)}
             >
               <Redo2 />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={tx('自动布局')}
+              title={tx('自动布局')}
+              disabled={!!busy}
+              onClick={() => void autoLayout()}
+            >
+              {busy === 'layout' ? (
+                <Loader2 className="animate-spin motion-reduce:animate-none" />
+              ) : (
+                <LayoutTemplate />
+              )}
             </Button>
           </div>
         )}

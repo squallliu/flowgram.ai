@@ -261,11 +261,11 @@ describe('static canvas geometry', () => {
       ['low', 146],
       ['else', 190],
     ]);
-    expect(first.ports.find((port) => port.type === 'input')!.locationConfig.top).toBe(24);
+    expect(first.ports.find((port) => port.type === 'input')!.locationConfig.top).toBe(first.height / 2);
     expect(
       second.ports.filter((port) => port.type === 'input').map((port) => port.locationConfig.top)
     ).toEqual([102, 146, 190]);
-    expect(second.ports.find((port) => port.type === 'output')!.locationConfig.top).toBe(24);
+    expect(second.ports.find((port) => port.type === 'output')!.locationConfig.top).toBe(second.height / 2);
     expect(first.ports.every((port) => !('targetElement' in port))).toBe(true);
   });
   it('uses compact content slots and aligns step ports without measuring content', () => {

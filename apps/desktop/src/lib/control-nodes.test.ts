@@ -35,6 +35,30 @@ describe('structured workflow port contracts', () => {
     expect(next.nodes[1].type).toBe('control.join');
     expect(next.nodes[1].data.forkId).toBe('fork');
   });
+  it('centers shared route ports as branch counts change and keeps branch ports aligned with their rows', () => {
+    for (const type of ['condition', 'control.switch', 'control.parallel']) {
+      for (const count of [1, 3, 8]) {
+        const branchIds = Array.from({ length: count }, (_, index) => `branch-${index}`);
+        const route: WorkflowNode = { id: 'route', type, data: {
+          branches: branchIds.map((id) => ({ id, label: id })),
+          conditions: branchIds.map((key) => ({ key, value: true })),
+        } };
+        const join: WorkflowNode = { id: 'join', type: type === 'control.switch' ? 'control.merge-branches' : 'control.join', data: { forkId: route.id } };
+        const graph = { nodes: [route, join], edges: [] };
+        const before = staticPorts(route, graph);
+        expect(before.ports.find((port) => port.type === 'input')?.locationConfig.top).toBe(before.height / 2);
+        expect(before.ports.filter((port) => port.type === 'output').map((port) => port.portID)).toEqual([
+          ...branchIds, ...(type === 'control.parallel' ? [] : ['else']),
+        ]);
+        if (type !== 'condition') {
+          const after = staticPorts(join, graph);
+          expect(after.ports.find((port) => port.type === 'output')?.locationConfig.top).toBe(after.height / 2);
+          expect(after.ports.filter((port) => port.type === 'input').map((port) => port.locationConfig.top))
+            .toEqual(before.ports.filter((port) => port.type === 'output').map((port) => port.locationConfig.top));
+        }
+      }
+    }
+  });
   it('edits and inserts in the intended nested graph only', () => {
     const loop = createNode('loop', 0);
     const root: WorkflowSchema = { nodes: [loop, fork], edges: [] };

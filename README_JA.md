@@ -27,23 +27,23 @@ FlowGram Desktopは、macOSとWindows向けのネイティブなAIエージェ�
 - **再利用：** バージョン管理されたワークフローを公開してHTTPやMCP経由で呼び出したり、別のワークフローから利用したりできます。
 - **管理：** プロジェクトごとにワークフローとチャットを整理し、プロジェクトをインポート・エクスポートできます。UIは英語と簡体字中国語に対応し、ライト・ダークテーマを選べます。6つの業界別サンプルプロジェクトで始められます。
 
+[![FlowGram Desktopの紹介動画を見る](https://flowgram.ai/desktop/flowgram-desktop-en-poster.jpg)](https://flowgram.ai/desktop/flowgram-desktop-en.mp4)
+
+[▶ 45秒の紹介動画を見る（英語）](https://flowgram.ai/desktop/flowgram-desktop-en.mp4) · [Desktopのセットアップと開発](./apps/desktop/README.md)
+
 ### Desktopをダウンロード
 
-[⬇ 最新の成功したビルドを確認](https://github.com/bytedance/flowgram.ai/actions/workflows/desktop-build.yml?query=is%3Asuccess)
+[⬇ 最新のプレビュー版](https://github.com/bytedance/flowgram.ai/releases/tag/desktop-preview)
 
-プレビュー版のインストーラーはDesktop Buildで生成されます。以下のリンクから検証済みビルドをダウンロードできます。新しいバージョンは上のリンクから成功した実行を開き、**Artifacts**でプラットフォームを選択してください。
+プラットフォームを選んで最新のプレビュー版をダウンロードできます。3つのプラットフォームのビルドがすべて成功すると自動更新され、ダウンロードURLは変わりません。
 
-| プラットフォーム | 検証済みプレビュー版 |
+| プラットフォーム | ダウンロード |
 | --- | --- |
-| macOS · Apple Silicon (ARM64) | [ZIPをダウンロード](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12264454194) · `.dmg` |
-| macOS · Intel | [ZIPをダウンロード](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12266052754) · `.dmg` |
-| Windows 10/11 · x64 | [ZIPをダウンロード](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12265318840) · `-setup.exe` |
+| macOS · Apple Silicon (ARM64) | [ダウンロード DMG](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_aarch64-apple-darwin.dmg) |
+| macOS · Intel | [ダウンロード DMG](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_x86_64-apple-darwin.dmg) |
+| Windows 10/11 · x64 | [ダウンロード EXE](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_x86_64-pc-windows-msvc-setup.exe) |
 
-ダウンロードにはGitHubへのログインが必要です。ZIPを展開し、macOSでは`.dmg`を開き、Windowsでは`-setup.exe`を実行してください。各ZIPにはインストーラー、`SHA256SUMS.txt`、`build-info.json`が含まれます。成果物の保存期間は14日間です。直接リンクが期限切れの場合は、最新ビルドへのリンクをご利用ください。プレビュー版インストーラーは未署名で、macOS版は公証されていません。
-
-[![FlowGram Desktopの紹介動画を見る](./apps/docs/src/public/desktop/flowgram-desktop-en-poster.jpg)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1)
-
-[▶ 45秒の紹介動画を見る（英語）](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1) · [Desktopのセットアップと開発](./apps/desktop/README.md)
+GitHubへのログインなしでインストーラーを直接ダウンロードできます。macOSでは.dmgを開き、Windowsではインストーラー.exeを実行してください。チェックサムとビルド情報はリリースページで確認できます。プレビュー版は未署名で、macOS版は公証されていません。
 
 ## 🎬 デモ
 

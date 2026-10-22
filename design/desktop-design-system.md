@@ -222,9 +222,17 @@
 
 预览使用 `node-preview` 的标签行与 text、reference、field、code、resource、count 语义片段，由 `node-presentation` 读取真实配置。字段名、类型、引用来源与值有独立层级，不再把所有配置拼成一段字符串。表格配置按声明列生成紧凑条目和完整提示，不直接转储对象键；多行模板只预览首个非空行。字段最多预览两项，剩余项用 +N 表示并提供完整提示；变量标签显示来源与字段末级名称，悬停查看完整路径；嵌套条件保留括号；空字符串、0、false 和 null 各自明确显示。枚举复用字段定义中的本地化标签，子流程引用使用流程名称。HTTP 方法和地址分为两行，方法引用不能强制转成数组字符串；地址只显示主机与路径，不暴露地址内凭证、查询参数或片段。等待时长明确显示 ms / s。模型使用当前绑定，历史快照只使用该次采集的模型；未采集不以当前默认模型替代。缺失配置用问题标记说明，不与运行状态混用。
 
-`node-layout` 是尺寸与静态端口坐标的唯一来源。预览行数来自声明，不使用 DOM 测量。路由 / 汇合的端口行从 80px 起、行高 44px，端口位于行中线；普通步骤与流程边界的输入、输出端口按静态声明高度垂直居中（一行步骤 42px、两行步骤 55px、流程边界 42px），紧凑内部边界为 18px；路由节点非分支侧仍位于标题中心 24px；容器外部端口使用静态百分比坐标 `top: 50%`，随引擎维护的容器边界垂直居中，添加按钮与端口提示同步居中，避免不同卡片高度导致连线错位。分支名称与条件逐行对应，汇合展示源分支名称及等待策略。端口区域不内部滚动，不因文案、主题、语言或运行状态改变几何。循环头部将标题、结构化退出条件与预算作为一个信息区，与内部子图通过留白区分，不绘制分隔横线；内部预留 128px 顶部、28px 水平、36px 底部空间，容器使用节点与画布混合表面，内部边界使用画布表面。
+`node-layout` 是尺寸与静态端口坐标的唯一来源。预览行数来自声明，不使用 DOM 测量。路由 / 汇合的端口行从 80px 起、行高 44px，端口位于行中线；普通步骤与流程边界的输入、输出端口按静态声明高度垂直居中（一行步骤 42px、两行步骤 55px、流程边界 42px），紧凑内部边界为 18px；路由节点非分支侧按静态声明高度垂直居中，并随分支数量对应的节点高度同步更新；容器外部端口使用静态百分比坐标 `top: 50%`，随引擎维护的容器边界垂直居中，添加按钮与端口提示同步居中，避免不同卡片高度导致连线错位。分支名称与条件逐行对应，汇合展示源分支名称及等待策略。端口区域不内部滚动，不因文案、主题、语言或运行状态改变几何。循环头部将标题、结构化退出条件与预算作为一个信息区，与内部子图通过留白区分，不绘制分隔横线；内部预留 128px 顶部、28px 水平、36px 底部空间，容器使用节点与画布混合表面，内部边界使用画布表面。
 
 选中运行后，卡片外侧显示可操作的执行标记：单次耗时、重复次数与失败数，或选定轮次与重试。点击定位共享运行检查器；后续成功不覆盖此前失败，模型 / 工具子调用不计入节点重复次数。标记更新不改变尺寸；失败只强调标记，选中描边继续使用主题令牌。缩放保留标题、配置预览和分支条件，避免隐藏文字留下空壳；仅在概览缩放下简化非失败运行标记的文字，不移动端口或重建画布。
+
+## 自动布局
+
+基础节点尺寸、容器留白和布局间距共享 `apps/desktop-backend/catalog/node-layout.json`，前端通过 `node-layout` 使用。布局按从左到右的层级排列，先处理容器内的子图，再为父图中的容器预留完整空间；分支按静态端口顺序排列，不扫描 DOM 或启用动态端口。
+
+Agent 和 MCP 的 `create_workflow`、结构性 `save_workflow` 自动执行 Rust 后端布局，无需打开画布。只改参数或标题时保留已有位置；`layout_workflow` 可显式整理已有画布，按预期 revision 保存，保持节点 ID、配置和连线不变。模型提示不再要求手算坐标。
+
+画布底部提供纯图标“自动布局”按钮，保留悬停提示与可访问名称，历史只读画布隐藏该按钮。手动操作复用 FlowGram `tools.autoLayout`，整体作为一次撤销操作，并在布局结束后统一同步草稿。节点位置过渡为 180ms，减少动态效果时直接完成；视口只在显式整理结束后适应内容，编辑器实例和选中节点保持不变。
 
 ## 画布连线
 
@@ -233,3 +241,15 @@
 默认连线为 1.5px 中性圆端曲线，选中与悬停为 2px，使用主题 selection 令牌。移除常驻的大号空心箭头，交互时显示紧凑的实心方向提示；回向连接常驻弱化方向提示。端点缩进 4px，与 8px 圆环端口相接，不叠加大箭头、断口和实心圆点。端口保留 24px 热区；悬停仅强化圆环和轻量光晕，不膨胀成大圆。连线插入按钮继续按需出现。
 
 调试与历史画布共用上述规则：实际路径用 foreground，未激活路径用独立 canvas-line-muted，悬停和选中优先恢复可辨识的强调；错误使用 destructive。运行投影不锁定颜色，不压过交互状态；重连过程的隐藏旧线保持隐藏。主题直接更新 CSS 令牌，不重建编辑器。路径与端口坐标不做过渡；颜色、透明度反馈为 120ms，流动虚线放慢到 1.2s，系统与应用减少动态效果时停止流动与过渡。
+
+
+### Trial run camera
+
+New trial runs follow the active node without changing selection or opening the node inspector. Node starts come from the run-scoped event stream, independently of the results panel. Center the active step with a 600ms pan (twice the shared panel duration), maintaining a readable minimum zoom of 65%. Coalesce steps within 120ms and finish each camera move before following the latest step; never replay intermediate queued steps. Parallel branches retain the current active branch until it finishes; nested executions focus the child rather than the container bounds. Completion preserves the final viewport, with failures focused at their originating node.
+
+Manual canvas pointer, wheel, navigation keys, toolbar camera actions, or execution inspection cancel the current move and pause following. During a trial run, the icon-only follow control in the bottom toolbar exposes its state through `aria-pressed` and resumes at the currently active step. Historical runs and mismatched/edited revisions never initiate following. Hiding the results panel preserves following. Reduced motion uses immediate positioning; theme, locale, and run changes preserve the mounted editor and graph data.
+
+
+### Conversation tool identity
+
+Tool-call rows keep a 13px, 1.5-stroke semantic icon at the leading edge throughout their lifecycle: workflow list / inspection / creation / saving / layout / validation / running / run history, node discovery / testing, and model discovery each have a dedicated glyph. Completed calls do not replace these icons with checkmarks. Progress, failure, uncertainty, and interruption appear beside the trailing status text; successful status stays text-only. A homogeneous collapsed tool group uses its tool icon; a mixed group uses Layers. Namespaced built-in MCP calls reuse the same mapping, other MCP tools use Plug, and unrecognized tools use Wrench. Icons are decorative, with tool names and status text providing accessible labels. Use theme text tokens and preserve existing expansion, motion, and turn grouping rules.

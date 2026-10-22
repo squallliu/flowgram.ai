@@ -33,15 +33,21 @@ pub fn definitions() -> Value {
         ),
         (
             "create_workflow",
-            "Create a workflow draft using a FlowGram schema with nodes and edges.",
+            "Create a workflow draft using a FlowGram schema with nodes and edges. Nodes, branches and nested containers are automatically laid out; do not calculate coordinates.",
             json!({"name":{"type":"string"},"schema":{"type":"object","additionalProperties":true}}),
             vec!["name", "schema"],
         ),
         (
             "save_workflow",
-            "Save a complete workflow with the expected revision. Read the latest workflow again on a revision conflict.",
+            "Save a complete workflow with the expected revision. Structural changes are automatically laid out; parameter-only edits retain the existing canvas positions. Read the latest workflow again on a revision conflict.",
             json!({"workflowId":{"type":"string"},"revision":{"type":"integer"},"name":{"type":"string"},"schema":{"type":"object","additionalProperties":true}}),
             vec!["workflowId", "revision", "name", "schema"],
+        ),
+        (
+            "layout_workflow",
+            "Arrange an existing workflow from left to right, including branches, joins and nested loop containers. Changes positions only, preserves node IDs and behavior, and saves a new revision. Use this to repair a disorganized canvas. Read the latest workflow again on a revision conflict.",
+            json!({"workflowId":{"type":"string"},"revision":{"type":"integer"}}),
+            vec!["workflowId", "revision"],
         ),
         (
             "validate_workflow",
@@ -143,6 +149,7 @@ impl Store {
                 .cloned()
                 .ok_or_else(|| Error::Invalid("Missing schema object".into()))?;
             let _: crate::model::Graph = serde_json::from_value(schema.clone())?;
+            let schema = crate::auto_layout::prepare(schema, None)?;
             return Ok(serde_json::to_value(
                 self.create_workflow(project, string(&args, "name")?, schema)
                     .await?,
@@ -201,11 +208,22 @@ impl Store {
                     .cloned()
                     .ok_or_else(|| Error::Invalid("Missing schema object".into()))?;
                 let _: crate::model::Graph = serde_json::from_value(schema.clone())?;
+                let schema = crate::auto_layout::prepare(schema, Some(&workflow.schema))?;
                 let revision = args["revision"]
                     .as_i64()
                     .ok_or_else(|| Error::Invalid("Missing revision".into()))?;
                 Ok(serde_json::to_value(
                     self.save_workflow(&workflow.id, revision, string(&args, "name")?, schema)
+                        .await?,
+                )?)
+            }
+            "layout_workflow" => {
+                let revision = args["revision"]
+                    .as_i64()
+                    .ok_or_else(|| Error::Invalid("Missing revision".into()))?;
+                let schema = crate::auto_layout::arrange(&workflow.schema)?;
+                Ok(serde_json::to_value(
+                    self.save_workflow(&workflow.id, revision, &workflow.name, schema)
                         .await?,
                 )?)
             }

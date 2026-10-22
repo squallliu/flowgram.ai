@@ -279,7 +279,7 @@ pub(super) async fn populate(store: &Store, project: &str, scenario: Scenario) -
             project,
             &debug.id,
             format!(
-                "{}：{}",
+                "{}{}{}",
                 text(
                     zh,
                     if index == 0 {
@@ -293,6 +293,7 @@ pub(super) async fn populate(store: &Store, project: &str, scenario: Scenario) -
                         "Rerun corrected input"
                     }
                 ),
+                if zh { "：" } else { ": " },
                 case.label.get(zh)
             ),
             Some(id),

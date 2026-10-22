@@ -4,20 +4,9 @@
  */
 import type { WorkflowNode } from './types';
 import { previewRowCount } from './node-preview';
+import geometry from '../../../desktop-backend/catalog/node-layout.json';
 
-export const NODE_LAYOUT = {
-  width: 280,
-  height: 110,
-  boundaryWidth: 240,
-  boundaryHeight: 84,
-  controlWidth: 168,
-  controlHeight: 36,
-  rowTop: 80,
-  rowHeight: 44,
-  rowBottom: 12,
-  containerWidth: 720,
-  containerHeight: 330,
-} as const;
+export const NODE_LAYOUT = geometry;
 export function nodeFamily(type: string) {
   if (['loop', 'control.repeat'].includes(type)) return 'container';
   if (
@@ -51,7 +40,7 @@ export function nodeLayout(node: Pick<WorkflowNode, 'type'>, inputs: number, out
       : 48 + previewRowCount(node.type) * 26 + 10;
   const width =
     family === 'route'
-      ? 320
+      ? NODE_LAYOUT.routeWidth
       : family === 'control'
       ? NODE_LAYOUT.controlWidth
       : family === 'boundary'

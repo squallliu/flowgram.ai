@@ -329,6 +329,7 @@ export function workflowActivity(item: ConversationItem) {
       'inspect_workflow',
       'create_workflow',
       'save_workflow',
+      'layout_workflow',
       'validate_workflow',
       'run_workflow',
       'test_node',

@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { atomicNodes } from './atomic-nodes';
 import { controlNodes } from './control-nodes';
 import {
-  errorText, getLanguagePreference, getLocale, localized, readLanguagePreference,
+  errorText, getLanguagePreference, getLocale, getSystemLocale, localized, readLanguagePreference,
   resolveLocale, setLanguagePreference, t, tx,
 } from './i18n';
 import messages from './locales/messages.json';
@@ -23,6 +23,20 @@ function language(value: 'en' | 'zh-CN' | 'system') {
 afterEach(() => { language('system'); storage.clear(); vi.unstubAllGlobals(); });
 
 describe('interface language and agent contract isolation', () => {
+  it('selects example content from the system language independently of interface preferences', () => {
+    vi.stubGlobal('navigator', { language: 'en-US' });
+    language('zh-CN');
+    expect(getLocale()).toBe('zh-CN');
+    expect(getSystemLocale()).toBe('en');
+    vi.stubGlobal('navigator', { language: 'zh-Hans-CN' });
+    language('en');
+    expect(getLocale()).toBe('en');
+    expect(getSystemLocale()).toBe('zh-CN');
+    vi.stubGlobal('navigator', { language: 'fr-FR' });
+    expect(getSystemLocale()).toBe('en');
+    vi.stubGlobal('navigator', undefined);
+    expect(getSystemLocale()).toBe('en');
+  });
   it('resolves system languages with an English fallback and validates stored preferences', () => {
     expect(resolveLocale('zh-Hans-CN')).toBe('zh-CN');
     expect(resolveLocale('zh_TW')).toBe('zh-CN');

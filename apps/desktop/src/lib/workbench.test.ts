@@ -176,6 +176,8 @@ describe('live workflow activity', () => {
   it('only reveals completed concrete workflow calls, including truncated create results', () => {
     expect(workflowActivity(tool('inspect_workflow'))?.workflowId).toBe('flow');
     expect(workflowActivity(tool('validate_workflow'))?.workflowId).toBe('flow');
+    expect(workflowActivity(tool('layout_workflow'))?.workflowId).toBe('flow');
+    expect(workflowActivity(tool('layout_workflow', { status: 'running' }))).toBeNull();
     expect(
       workflowActivity(
         tool('create_workflow', {

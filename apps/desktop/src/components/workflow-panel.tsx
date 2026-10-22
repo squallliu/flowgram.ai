@@ -18,6 +18,7 @@ import {
 
 import {
   Check,
+  Focus,
   MessageCircle,
   MoreHorizontal,
   PanelRightClose,
@@ -41,6 +42,7 @@ import {
   type NodeCommand,
   type Edge,
 } from '../lib/workflow-editing';
+import { useRunFollow } from '../lib/use-run-follow';
 import type {
   ModelSettings,
   RuntimeEvent,
@@ -219,6 +221,7 @@ export function WorkflowPanel({
     JSON.stringify(defaultRunInputs(workflow.schema), null, 2)
   );
   const [run, setRun] = useState<Run | null>(null);
+  const follow = useRunFollow(run, workflow.id, workflow.revision, dirty, schema);
   useEffect(() => {
     const receive = () => {
       const intent = takeDebugIntent(workflow.projectId, workflow.id);
@@ -619,6 +622,7 @@ export function WorkflowPanel({
         ...(debugOrigin ? { origin: debugOrigin } : {}),
       });
       setRun(result);
+      follow.start(result.id);
       setResultsVisible(true);
       onRun(result);
       setRunOpen(false);
@@ -912,6 +916,9 @@ export function WorkflowPanel({
           <Suspense fallback={<p className="p-4 text-xs text-muted-foreground">{t('loading')}</p>}>
             <WorkflowCanvas
               ref={canvas}
+              followNodeId={follow.nodeId}
+              followRequest={follow.request}
+              onManualNavigate={follow.pause}
               statuses={statuses}
               executions={nodeExecutions}
               workflowNames={Object.fromEntries(
@@ -939,6 +946,19 @@ export function WorkflowPanel({
               }
               toolbarTrailing={
                 <>
+                  {follow.available && (
+                    <Button
+                      data-run-follow-control
+                      variant="ghost"
+                      size="icon"
+                      aria-pressed={!follow.paused}
+                      aria-label={tx(follow.paused ? '继续跟随运行' : '暂停跟随运行')}
+                      title={tx(follow.paused ? '继续跟随运行' : '暂停跟随运行')}
+                      onClick={follow.toggle}
+                    >
+                      <Focus />
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="ghost"
@@ -950,6 +970,7 @@ export function WorkflowPanel({
                     <span className="workflow-canvas-tool-label">{t('validate')}</span>
                   </Button>
                   <Button
+                    data-preserve-run-follow
                     ref={resultsToggle}
                     size="sm"
                     variant="ghost"
@@ -1237,6 +1258,7 @@ export function WorkflowPanel({
                     run.revision === workflow.revision &&
                     !dirty
                   ) {
+                    follow.pause();
                     canvas.current?.select([entry.nodeId]);
                     canvas.current?.reveal(entry.nodeId);
                   }

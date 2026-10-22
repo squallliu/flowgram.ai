@@ -653,6 +653,10 @@ button:focus-visible,
   color: var(--foreground);
 }
 .conversation-tool-status {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
   margin-left: auto;
   white-space: nowrap;
   font-size: 11px;

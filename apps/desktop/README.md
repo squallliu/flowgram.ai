@@ -154,7 +154,7 @@ Windows 共运行 118 项 Rust 测试；修复后复测受影响的导入、删�
 
 产物检查在临时中文与空格路径内使用独立数据目录。macOS 挂载实际 DMG；Windows 解包实际 NSIS 安装器，核对三个二进制齐备，并运行包内服务验证 HTTP、MCP 初始化 / 工具目录及独立服务数据库可用性。此检查不启动 GUI，也不替代实机交互验收。
 
-成功后在对应 Actions run 的 Artifacts 下载，保留 14 天。每份产物包含带版本与目标架构的安装包、`SHA256SUMS.txt` 和记录源码提交的 `build-info.json`。当前生成未配置发布者签名 / Apple 公证的测试包，不需要发布凭证；不会创建 GitHub Release、推送标签或发布 npm 包。正式签名、公证及自动更新需另行配置。
+三个平台全部构建成功后，官方仓库的 main 推送或 main 分支手动构建会自动更新公开的 [Desktop Preview](https://github.com/bytedance/flowgram.ai/releases/tag/desktop-preview) 预发布通道。安装包下载无需登录 GitHub；沿用现有的 `desktop-preview` 通道和不含版本号的文件名，确保官网与 README 无需随版本更新。自动更新只替换安装包、校验和与构建信息，不创建或移动标签、不新建或发布 Release；通道不存在时直接失败。标签保持创建时的位置，当前安装包的实际版本、源码提交及构建记录以 `build-info.json` 为准。发布前校验三平台的来源提交、版本、文件大小和 SHA-256，发布页同时提供校验和及构建信息。PR、合并队列和 fork 构建不会发布；Actions 原始产物另保留 14 天用于排查。发布任务仅使用仓库的 GitHub token，保持 npm 发布流程独立。当前预览包未配置发布者签名 / Apple 公证，应用内自动更新需另行配置。
 
 本地复查流水线脚本（先完成对应平台打包）：
 

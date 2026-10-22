@@ -25,8 +25,11 @@ export function readLanguagePreference(): LanguagePreference {
   } catch { return 'system'; }
 }
 let preference = readLanguagePreference();
+export function getSystemLocale(): Locale {
+  return resolveLocale(globalThis.navigator?.language);
+}
 export function getLocale(): Locale {
-  return preference === 'system' ? resolveLocale(globalThis.navigator?.language) : preference;
+  return preference === 'system' ? getSystemLocale() : preference;
 }
 export function getLanguagePreference(): LanguagePreference { return preference; }
 function notify() {

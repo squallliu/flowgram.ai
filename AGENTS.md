@@ -18,6 +18,7 @@ Follow conventional commits (`type(scope): subject`) as seen in history (`fix(au
 - Commit each completed feature immediately after its relevant checks pass. Do not begin an unrelated feature while the completed feature is still uncommitted.
 - Keep each commit focused on one functional change, including its necessary tests and documentation. Split shared files by feature when changes overlap; do not use broad staging to combine unrelated work.
 - Before committing, inspect the staged diff and exclude generated artifacts, local data, and credentials. After committing, check the worktree and clearly distinguish any pre-existing or unfinished changes. Do not push unless requested.
+- Git tag events notify the team chat. Do not create, push, or move Git tags or publish releases unless the user explicitly requests that action. Desktop preview updates must only replace assets in the existing published channel; never create or publish a channel automatically.
 
 ## Desktop Design Standard
 

@@ -27,23 +27,23 @@ FlowGram Desktop — нативная рабочая среда для ИИ-аг
 - **Повторное использование:** публикуйте рабочие процессы с версиями для клиентов HTTP и MCP или вызывайте их из других рабочих процессов.
 - **Организация:** управляйте рабочими процессами и чатами по проектам, импортируйте и экспортируйте проекты, используйте интерфейс на английском или упрощённом китайском языке со светлой или тёмной темой. Шесть отраслевых примеров проектов помогут начать работу.
 
+[![Смотреть презентационное видео FlowGram Desktop](https://flowgram.ai/desktop/flowgram-desktop-en-poster.jpg)](https://flowgram.ai/desktop/flowgram-desktop-en.mp4)
+
+[▶ Смотреть презентационное видео: 45 секунд, на английском](https://flowgram.ai/desktop/flowgram-desktop-en.mp4) · [Настройка и разработка Desktop](./apps/desktop/README.md)
+
 ### Скачать Desktop
 
-[⬇ Последние успешные сборки](https://github.com/bytedance/flowgram.ai/actions/workflows/desktop-build.yml?query=is%3Asuccess)
+[⬇ Последняя предварительная версия](https://github.com/bytedance/flowgram.ai/releases/tag/desktop-preview)
 
-Desktop Build создаёт предварительные установочные пакеты. Ссылки ниже ведут на проверенную сборку. Чтобы получить более новую, откройте ссылку выше, выберите успешный запуск и найдите свою платформу в разделе **Artifacts**.
+Выберите платформу для загрузки последней предварительной версии. Постоянные ссылки обновляются автоматически после успешной сборки для всех трёх платформ.
 
-| Платформа | Скачать проверенную предварительную сборку |
+| Платформа | Скачать |
 | --- | --- |
-| macOS · Apple Silicon (ARM64) | [Скачать ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12264454194) · `.dmg` |
-| macOS · Intel | [Скачать ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12266052754) · `.dmg` |
-| Windows 10/11 · x64 | [Скачать ZIP](https://github.com/bytedance/flowgram.ai/actions/runs/39422548882/artifacts/12265318840) · `-setup.exe` |
+| macOS · Apple Silicon (ARM64) | [Скачать DMG](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_aarch64-apple-darwin.dmg) |
+| macOS · Intel | [Скачать DMG](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_x86_64-apple-darwin.dmg) |
+| Windows 10/11 · x64 | [Скачать EXE](https://github.com/bytedance/flowgram.ai/releases/download/desktop-preview/FlowGram_x86_64-pc-windows-msvc-setup.exe) |
 
-Для скачивания войдите в GitHub. Распакуйте ZIP и откройте `.dmg` в macOS или запустите `-setup.exe` в Windows. В каждом ZIP находятся установщик, `SHA256SUMS.txt` и `build-info.json`. Артефакты хранятся 14 дней; если прямая ссылка устарела, используйте ссылку на последние сборки. Предварительные установщики не подписаны; сборки macOS не прошли нотариализацию.
-
-[![Смотреть презентационное видео FlowGram Desktop](./apps/docs/src/public/desktop/flowgram-desktop-en-poster.jpg)](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1)
-
-[▶ Смотреть презентационное видео: 45 секунд, на английском](./apps/docs/src/public/desktop/flowgram-desktop-en.mp4?raw=1) · [Настройка и разработка Desktop](./apps/desktop/README.md)
+Скачайте установщик напрямую, без входа в GitHub. Откройте .dmg в macOS или запустите установщик .exe в Windows. Контрольные суммы и сведения о сборке доступны на странице выпуска. Предварительные установщики не подписаны; сборки macOS не прошли нотариализацию.
 
 ## 🎬 Демо
 

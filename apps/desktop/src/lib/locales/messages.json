@@ -23,6 +23,7 @@
   "发起试运行": "Start workflow run",
   "读取运行记录": "Read run history",
   "查看可用节点": "Browse available nodes",
+  "查看可用模型": "Browse available models",
   "准备参数": "Preparing arguments",
   "等待执行": "Pending",
   "执行中": "Running",
@@ -2081,5 +2082,8 @@
   "方法": "Method",
   "地址": "URL",
   "时长": "Duration",
-  "直到": "Until"
+  "直到": "Until",
+  "自动布局": "Auto layout",
+  "继续跟随运行": "Resume following run",
+  "暂停跟随运行": "Pause following run"
 }

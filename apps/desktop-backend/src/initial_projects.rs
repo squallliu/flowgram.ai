@@ -13,15 +13,23 @@ use serde::Deserialize;
 use serde_json::{Value, json};
 
 const READY: &str = ".initial-projects-ready.json";
+fn example_locale(system_language: &str) -> &'static str {
+    if system_language
+        .split(['-', '_'])
+        .next()
+        .is_some_and(|language| language.eq_ignore_ascii_case("zh"))
+    {
+        "zh-CN"
+    } else {
+        "en"
+    }
+}
 impl Registry {
     /// A persisted empty registry is intentional, including after deleting every project.
     /// Only a never-initialized workspace receives examples. No model or network is used.
     pub async fn initialize_projects(&self, locale: &str) -> Result<bool> {
-        if !matches!(locale, "en" | "zh-CN") {
-            return Err(Error::Invalid(
-                "Unsupported initial project language".into(),
-            ));
-        }
+        // Seed documents follow the device language, not a saved UI preference.
+        let locale = example_locale(locale);
         let _mutation = self.mutations.lock().await;
         if !self.records.lock().await.is_empty()
             || self.directory.join("projects.json").try_exists()?
@@ -87,6 +95,7 @@ impl Registry {
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Initialize {
+    #[serde(default)]
     locale: String,
 }
 pub(crate) fn routes() -> Router<RegistryState> {
@@ -98,4 +107,21 @@ async fn initialize(
 ) -> Result<Json<Value>> {
     let initialized = state.registry.initialize_projects(&input.locale).await?;
     Ok(Json(json!({"initialized":initialized})))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn examples_default_to_english_and_only_chinese_system_languages_opt_in() {
+        for language in ["", "en", "en-US", "fr-FR", "ja-JP", "unknown", "zhish"] {
+            assert_eq!(example_locale(language), "en");
+        }
+        for language in ["zh", "zh-CN", "zh-Hans-CN", "zh_TW", "ZH-hant-HK"] {
+            assert_eq!(example_locale(language), "zh-CN");
+        }
+        let missing: Initialize = serde_json::from_value(json!({})).unwrap();
+        assert_eq!(example_locale(&missing.locale), "en");
+    }
 }

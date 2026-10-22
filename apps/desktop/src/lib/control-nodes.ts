@@ -59,7 +59,7 @@ export function staticPorts(node: WorkflowNode, graph: WorkflowSchema) {
       locationConfig: {
         ...(type === 'input' ? { left: 0 } : { right: 0 }),
         top: rowSide(type) ? NODE_LAYOUT.rowTop + index * NODE_LAYOUT.rowHeight + NODE_LAYOUT.rowHeight / 2
-          : layout.family === 'container' ? '50%' : layout.family === 'route' ? 24 : layout.height / 2,
+          : layout.family === 'container' ? '50%' : layout.height / 2,
       },
     }))),
   };
